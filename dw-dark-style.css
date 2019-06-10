@@ -1,5 +1,4 @@
-@-moz-document domain("dreamwidth.org") {
-body, #canvas, #shim-alpha {
+body, #canvas, #shim-alpha, #masthead {
     background-color: #2d2d2d;
     color: #ded9d9;
 }
@@ -7,14 +6,37 @@ body, #canvas, #shim-alpha {
     border-top: .5em solid #5f5e5e;
     border-bottom: .5em solid #a35359;
 }
+#logo {
+    height: 0 !important;
+	  width: 0 !important;
+	  /* these numbers match the new image's dimensions */
+	  padding-left: 51px !important;
+	  padding-top: 241px !important;
+	  background: url() no-repeat !important;
+}
 a, a:link, .link {
     color: #ee5056;
 }
 a:visited {
     color: #ff7e82;
 }
+/* Main Page (not logged in) */
+div#intro-box-main {
+    background-color: #624040;
+}
+div#intro-border-main-left, div#intro-border-main-bottomleft, div#intro-border-main-topleft {
+    background-image: none;
+}
+div#intro-box-main p {
+    color: #ded9d9;
+}
+/* Entry poage */
+.alert-box.secondary, .panel, #htmltools, #draftstatus, #options, #submitbar, #compose-entry ul li a {
+    background: #624040 !important;
+    color: #ded9d9 !important;
+}
 /* Navigation */
-nav {
+nav, .main-nav:not(.expanded) {
     background: #624040;
 }
 nav ul li.topnav a {
@@ -101,13 +123,14 @@ nav ul li.hover a {
     background-color: #343434;
 }
 /* Form elements */
-#panel-quickupdate .contents label {
+#panel-quickupdate .contents label, .panel h3, label {
     color: #c4c4c4;
 }
-input.text, textarea.text, select.select, .autocomplete_container {
+input.text, textarea.text, textarea, .autocomplete-container, select.select, .autocomplete_container {
     background: #38383d;
+    color: #e2e2e2;
 }
-.toolbar input, .submit input, .component button, button {
+.toolbar input, .submit input, .select, .component button, button {
     background-color: #38383d;
     border: 1px solid #c9c7c7;
     box-shadow: none;
@@ -122,13 +145,6 @@ input.text, textarea.text, select.select, .autocomplete_container {
     text-shadow: none;
 }
 /* Icon picker */
-/* UNCOMMENT BELOW SO ICON BROWSER DOESN'T SUCK ON MOBILE */
-/*.ui-dialog.ui-widget.ui-widget-content.ui-corner-all.iconselector {
-    width: 100% !important;
-    left: 0 !important;
-    height: 98% !important;
-    width: 95% !important;
-}*/
 .ui-widget-content {
     border: 1px solid #aaa;
     background: #2e2e2e;
@@ -144,7 +160,6 @@ input.text, textarea.text, select.select, .autocomplete_container {
     border: 1px solid #aaa;
     background: #574646;
     color: #e1e1e1;
-    font-weight: bold;
 }
 #iconselector_icons_list li {
     border-color: #949494;
