@@ -1,4 +1,4 @@
-# DWStyles
+# DW Styles
 Just some user styles for Dreamwidth.org
 
 These can be used with the Stylus extension for Firefox and Chrome and Firefox on Android.
