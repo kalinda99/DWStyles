@@ -1,0 +1,12 @@
+OPTIONS:
+- Apply the styles through this instead of stylus DONE but the delay is bad, may wanna just use Stylus instead
+- Change cookie if user chooses to so we can keep chosen layout when not logged in
+- Only apply Dark style to journals not displayed in original theme (if they lack the "lj_controlstrip" element id) DONE
+- Quick keywords: easy way to set multiple keywords/comments
+
+THEME:
+- Finish pages for dark theme
+
+CUSTOM ICON BROWSER:
+- Icons for currently logged in user are here: https://www.dreamwidth.org/__rpc_userpicselect
+- Only apply on old new entry pages and everywhere the icon browser div is found.

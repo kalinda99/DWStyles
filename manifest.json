@@ -1,0 +1,35 @@
+{
+  "manifest_version": 2,
+  "name":"Dreamwidth Toolbox",
+  "version":"1.0",
+  "description":"Tools to make Dreamwidth better and more mobile friendly.",
+  "background": {
+	   "page": "background.html"
+  },
+
+  "content_scripts": [
+  {
+    "all_frames": true,
+    "run_at": "document_end",
+    "css": [ "css/main.css" ],
+    "matches": ["*://*.dreamwidth.org/*"],
+    "js": ["js/things.js"]
+  }
+],
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "dwtoolbox@andontie.net",
+      "strict_min_version": "57.0"
+    }
+  },
+
+  "permissions":
+  [
+  "tabs",
+  "storage",
+  "cookies",
+	"http://*.dreamwidth.org/*",
+	"https://*.dreamwidth.org/*"
+  ]
+}
