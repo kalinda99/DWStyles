@@ -1,4 +1,4 @@
-TODO
+# TODO
 In no particular order...
 - Quick keywords: easy way to set a pattern of keywords/comments on multiple icons
 - Finish pages for dark theme
@@ -7,3 +7,4 @@ In no particular order...
 - Responsive comment forms
 - Import/export settings
 - Allow user to customize options button position and look
+- Batch icon upload (huge maybe here)
