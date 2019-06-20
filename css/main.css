@@ -3,15 +3,17 @@
   color: #d6d1d1;
   font-size: small;
   font-family: Verdana;
+  text-align: center;
   display: inline-block;
   position: fixed;
   opacity: 0.5;
-  border: 1px solid  #d6d1d1;
-  border-radius: 45px;
+  border: 1px solid #d6d1d1;
+  border-radius: 65px;
   box-shadow: 0 0 15px rgba(0,0,0,0.4);
-  padding: 5px;
+  padding: 10px;
   right: 3%;
   bottom: 5%;
+  z-index: 1200;
 }
 
 #opt-button:hover {
@@ -37,7 +39,7 @@
   z-index: 1005;
 }
 
-.options {
+.op {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -47,20 +49,21 @@
   border-radius: 15px;
   background: #624040;
   color: #d6d1d1;
+  line-height: 30px;
   box-shadow: 0 0 10px rgba(0,0,0,0.4);
   transform: translate(-50%,-50%);
   transition: all .4s ease-in-out;
 }
 
-h3 .options {
+h3 .op {
   text-align: center;
 }
 
-#save-opt, #close-opt {
+#close-opt {
   text-align: center;
 }
 
-#modal-overlay {
+#icons-overlay {
   position: fixed;
   top: 0;
   bottom: 0;
@@ -85,6 +88,7 @@ h3 .options {
   box-shadow: 0 0 10px rgba(0,0,0,0.4);
   transform: translate(-50%,-50%);
   transition: all .4s ease-in-out;
+  overflow-y: initial !important;
 }
 
 .dark .modal {
@@ -102,13 +106,12 @@ hr {
   margin-top: 5px;
 }
 
-#header #icon-browser-close {
-  margin: 5px;
+#icon-browser-close {
+  margin-top: 1px;
   float: right;
   font-size: 2.5rem;
-  line-height: 1;
   position: absolute;
-  top: .5rem;
+  top: 0;
   right: .6875rem;
   color: #c1272d;
   font-weight: bold;
@@ -117,31 +120,62 @@ hr {
   text-decoration: none;
 }
 
+#footer {
+  text-align: center;
+  height: auto;
+}
+
 #modal-body {
   position: relative;
-  height: auto;
+  overflow-y: auto;
+  height: 45%;
   z-index: 20;
-  padding: 0;
+  padding: 5px;
   margin: 0;
 }
 
-.icon-size {
-  text-align: right;
+/* #keywords {
+  width: 100px;
   font-size: small;
+} */
+
+.icon {
+  border: solid 10px #2e2e2e;
+  display: inline-block;
+  margin: 5px;
+  height: 100px;
 }
 
-#icons {
-  align-items: center;
+.icon:hover {
+  border: solid 10px #7a7a7a;
+  cursor: pointer;
+}
+
+[attribute="selected"] {
+  border: solid 10px #7a0000;
+}
+
+[attribute="selected"]:hover {
+  border: solid 10px #7a7a7a;
+  cursor: pointer;
+}
+
+#icons-list {
   text-align: center;
 }
 
-.th {
-  border: solid 4px #fff;
+@media screen and (max-width: 600px) {
+	.modal, .options {
+		width: 95%;
+    height: 95%;
+    margin-top: 0;
+	}
 }
 
 @media screen and (max-width: 600px) {
-	.modal {
+	#modal-body {
 		width: 95%;
+    height: 85%;
     margin-top: 0;
 	}
 }
