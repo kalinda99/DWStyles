@@ -45,6 +45,6 @@ function pageLoaded() {
 //     console.log("Message recieved! Deleting Lynx cookie...")
 //     delCookie();
 //   }
-// };
+};
 
 window.onload=function() { pageLoaded(); };
