@@ -69,6 +69,8 @@ h3 .op {
   bottom: 0;
   left: 0;
   right: 0;
+  height: 100%;
+  width: 100%;
   background: #000;
   background: rgba(0,0,0,0.45);
   z-index: 1004;
@@ -76,19 +78,19 @@ h3 .op {
 }
 
 .modal {
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
-  padding: 5px;
-  width: 65%;
-  border: 5px solid black;
+  padding: 25px;
+  width: 950px;
+  height: 55%;
+  border: 5px solid #7a7a7a;
   border-radius: 15px;
   background: #624040;
   color: #d6d1d1;
   box-shadow: 0 0 10px rgba(0,0,0,0.4);
   transform: translate(-50%,-50%);
   transition: all .4s ease-in-out;
-  overflow-y: initial !important;
 }
 
 .dark .modal {
@@ -96,54 +98,69 @@ h3 .op {
   color: #111;
 }
 
+#modal-guts {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+}
+
 hr {
-  width: 95%;
+  width: 98%;
+  text-align: center;
 }
 
 #header {
   text-align: left;
   font-size: small;
-  margin-top: 5px;
+  margin: 5px;
+  height: 2.3rem;
+}
+
+#keyword-label {
+  display: inline-block;
+}
+
+#keywords {
+  display: none;
+  padding: 10px;
+  text-decoration: underline;
+  text-align: center;
 }
 
 #icon-browser-close {
-  margin-top: 1px;
   float: right;
-  font-size: 2.5rem;
+  font-size: 2.0rem;
   position: absolute;
   top: 0;
-  right: .6875rem;
+  border: none;
+  padding-right: 5px;
+  right: 0;
   color: #c1272d;
+  background: none;
   font-weight: bold;
   font-family: Verdana;
   cursor: pointer;
   text-decoration: none;
 }
 
-#footer {
-  text-align: center;
-  height: auto;
+#icon-browser-close:hover {
+  color: #7a7a7a;
 }
 
 #modal-body {
-  position: relative;
-  overflow-y: auto;
-  height: 45%;
-  z-index: 20;
-  padding: 5px;
-  margin: 0;
+  margin-top: 5px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
-
-/* #keywords {
-  width: 100px;
-  font-size: small;
-} */
 
 .icon {
   border: solid 10px #2e2e2e;
+  height: 100px;
   display: inline-block;
   margin: 5px;
-  height: 100px;
 }
 
 .icon:hover {
@@ -151,19 +168,15 @@ hr {
   cursor: pointer;
 }
 
-[attribute="selected"] {
+.icon:focus, div[role=selected] {
   border: solid 10px #7a0000;
-}
-
-[attribute="selected"]:hover {
-  border: solid 10px #7a7a7a;
-  cursor: pointer;
 }
 
 #icons-list {
   text-align: center;
 }
 
+/* Responsive design!! */
 @media screen and (max-width: 600px) {
 	.modal, .options {
 		width: 95%;
@@ -173,7 +186,7 @@ hr {
 }
 
 @media screen and (max-width: 600px) {
-	#modal-body {
+	#modal-guts {
 		width: 95%;
     height: 85%;
     margin-top: 0;

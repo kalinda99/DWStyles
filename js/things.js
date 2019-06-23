@@ -234,7 +234,6 @@ function inject() {
       <hr>
       <form id="opt">
       <input type="checkbox" id="theme">Dark style for Lynx/Tropo Red<br>
-      <input type="checkbox" id="drafts">Auto-save tag/comment drafts<br>
       <p></p>
       <p></p>
       <p><b>UI Tweaks</b></p>
@@ -296,7 +295,8 @@ function injectBrowseBt() {
     console.log("No icon browser on this page. Or you don't have a paid account.")
   }
   else {
-    oldBt.parentNode.removeChild(oldBt);
+    // oldBt.parentNode.removeChild(oldBt);
+    oldBt.style = "display: none";
     let firstKid = document.getElementById("prop_picture_keyword");
     let newKid = document.createElement("input");
     newKid.id = "icon-browser-open";
@@ -310,10 +310,11 @@ function injectBrowseBt() {
 
 // remove the button
 function browseOff() {
+  let oldBt = document.getElementById("lj_userpicselect");
   let browseBt = document.getElementById("icon-browser-open");
   if (browseBt == !null) {
     document.body.removeChild(browseBt);
-    // add some code here to restore original button
+    oldBt.style.display = "block";
     browser.storage.local.set({icon_browser: false})
   }
 }
@@ -341,12 +342,12 @@ function getIcons() {
       for (let i = 0; i < jsonThingy.ids.length; i++) {
         let id = jsonThingy.ids[i];
         let icons = jsonThingy.pics[id];
-        let iconArr = [icons.keywords];
-        imgSrc += '<div class="icon" id="' + icons.keywords + '"><img src="' + icons.url + '"></div>';
+        imgSrc += '<div class="icon" tabindex=0 id="' + icons.keywords + '"><img src="' + icons.url + '"></div>';
       }
       ICONCACHE = imgSrc; // assign the icons to our cache for next time
       iconsDiv.innerHTML = ICONCACHE;
-      addListeners(); // add listenrs to each icon
+      addListeners(); // add listeners to each icon
+      addIndex();
       };
     rq.send();
   }
@@ -357,19 +358,18 @@ function injectBrowser() {
   let injectB = document.createElement("div");
   injectB.innerHTML = `
     <div class="modal">
+    <div id="modal-guts">
       <div id="header">
-          <p>Size: Small | Large <a id="icon-browser-close" href="#close">X</a>
-          <br>Show Keywords: Yes | No
-          <hr>
+        <p>Size: <input type="radio" id="lil-icons" name="size" value="small">Small <input type="radio" id="big-icons" name="size" value="large">Large <input id="icon-browser-close" type="button" value="X">
+        <div id="keyword-label"><p>Keywords: <div id="keywords"></div></div>
+        <!-- <div id="keyword-opt">Show Keywords: Yes | No</div> -->
       </div>
       <div id="modal-body">
-        <div id="icons-list">
+        <hr>
+        <div id="icons-list" class="normal-size">
         <!-- Icons / keywords go here -->
         </div>
       </div>
-      <div id="footer">
-        <hr>
-        <p><input id="select" type="button" value="Select Icon">
       </div>
     </div>
   `;
@@ -383,12 +383,37 @@ function injectBrowser() {
   document.getElementById("icon-browser-close").addEventListener('click', function() {
     closeModal();
   });
-  document.getElementById("select").addEventListener('click', function () {
-    let selectIcon = document.querySelector("selected");
-    if (selectIcon !== null) {
-      closeModal();
-    };
-  });
+
+  // document.getElementById("lil-icons").addEventListener('onchange' function () {
+  //
+  // })
+  // document.getElementById("select").addEventListener('click', function () {
+  //   let selectIcon = document.querySelector("selected");
+  //   if (selectIcon !== null) {
+  //     closeModal();
+  //   };
+  // });
+}
+
+function addIndex() {
+  let icons = document.getElementsByClassName("icon");
+
+  for (var i = 0; i < icons.length; i++) {
+    let num = 1;
+    icons[i].tabindex += num;
+  };
+}
+
+// Remove any lingering selected roles so only one icon is highlighted
+function killOldRole() {
+  let oldRole = document.querySelector("div[role=selected]");
+
+  if (oldRole !== null) {
+      let role = document.createAttribute("role");
+      role.value = "none";
+      oldRole.setAttributeNode(role);
+      console.log("The old role has been killed. This function has finished :)");
+  };
 }
 
 function addListeners() {
@@ -397,10 +422,17 @@ function addListeners() {
   for (var i = 0; i < iconList.length; i++) {
     let attribute = iconList[i].getAttribute("id");
     let dropDown = document.getElementById("prop_picture_keyword");
+    let kwDisplay = document.getElementById("keywords");
+    let getRole = document.querySelector("div[role=selected]");
+    let role = document.createAttribute("role");
 
     iconList[i].addEventListener('click', function() {
-      dropDown.value = attribute;
-      attribute.selected = "selected";
+      killOldRole();
+      role.value = "selected";
+      this.setAttributeNode(role);
+      kwDisplay.innerHTML = attribute; // display the keywords
+      kwDisplay.style.display = "inline-block"; //unhide the keyword element
+      dropDown.value = attribute; // change to the selected icon in the dropdown box
     });
     iconList[i].addEventListener('dblclick', function() {
       dropDown.value = attribute;
@@ -437,10 +469,9 @@ function begin() {
       injectBrowseBt();
       document.getElementById("browser").checked = true;
     }
-  })
-  browser.storage.local.get(['cookie'], function (response) {
-    if (response.cookie == true) {
-      document.getElementById("lynx").checked = true;
+    else {
+      browseOff();
+      document.getElementById("browser").checked = false;
     }
   })
 }
