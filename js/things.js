@@ -11,13 +11,16 @@ function closeOptions() {
 
 // Appply dark style if not on original themed journal page
 function setDarkTheme() {
-  // browser.contentScripts.register({
-  //     matches: ["*://*.dreamwidth.org/*"],
-  //     excludeMatches: ["*://.*\.dreamwidth\.org.*"],
-  //     css: [{file: "css/dark.css"}],
-  //     allFrames: true,
-  //     runAt: "document_start"
-  //   });
+  // browser.storage.local.set({theme: true});
+  // let ljStrip = document.querySelector("#lj_controlstrip");
+  //   if (ljStrip == null) {
+  //     browser.contentScripts.register({
+  //         matches: ["*://*.dreamwidth.org/*"],
+  //         css: [{file: "css/tropored-dark.css"}],
+  //         allFrames: true,
+  //         runAt: "document_end"
+  //       });
+  //   }
   let darkStyle = document.createElement("div");
   darkStyle.id = "dark-theme";
   darkStyle.style = "display: none;";
@@ -92,6 +95,9 @@ function setDarkTheme() {
                 .action-box .inner, .comment-page-list {
                     background-color: #703e43;
                     color:#ded9d9;
+                }
+                li::before, li::after {
+                    color: #d6d1d1
                 }
                 /* Inbox */
                 .header {
@@ -210,11 +216,10 @@ function setDarkTheme() {
                     background: #373737;
                 }</style>
                 `
-  document.body.appendChild(darkStyle);
   browser.storage.local.set({theme: true});
   let ljStrip = document.querySelector("#lj_controlstrip");
-    if (ljStrip !== null) {
-      darkStyle.style = "display: block;";
+    if (ljStrip == null) {
+      document.body.appendChild(darkStyle);
     }
 }
 // turn off dark theme
@@ -224,51 +229,158 @@ function themeOff() {
   browser.storage.local.set({theme: false});
 }
 
+function killOldTabRole() {
+  let oldTab = document.querySelector("input[role=selectedTab]");
+  let oldTabPg = document.querySelector("div[role=currentTab]");
+
+  if (oldTab !== null) {
+    let tRole = document.createAttribute("role");
+    let pRole = document.createAttribute("role");
+
+    tRole.value = "none";
+    pRole.value = "hidden";
+    oldTab.setAttributeNode(tRole);
+    oldTabPg.setAttributeNode(pRole);
+    console.log("The function to kill tab/div roles works, huzzah!~");
+  };
+}
+
 // inject all our html in hidden divs
 function inject() {
   let injectDiv = document.createElement("div");
   injectDiv.id = "opt-overlay";
   injectDiv.innerHTML = `
-    <div class="op">
-      <center><h3>DreamWidgets</h3></center>
-      <hr>
-      <form id="opt">
-      <input type="checkbox" id="theme">Dark style for Lynx/Tropo Red<br>
-      <p></p>
-      <p></p>
-      <p><b>UI Tweaks</b></p>
-      <input type="checkbox" id="browser">Mobile-friendly icon browser (paid accounts only!)<br>
-      <input type="checkbox" id="shortcuts">Quick shortcuts<br>
-      <input type="checkbox" id="rcomments">Mobile-friendly comment forms<br>
-      <input type="checkbox" id="flat">Mobile-friendly flat view<br>
-      <p></p>
-      <p></p>
-      <p><b>Import / Export Settings:</b></p>
-      <p><input type="button" id="export" value="Export to file" class="ex"></p>
-      <p>Import from file:</p>
-      <p><input type="file" id="browse" accept=".json" class="im"> <input type="button" id="import" value="Import">
-      </form>
-      <hr>
-      <center><input id="close-opt" type="button" value="Close"></center>
-    </div>
+      <div class="op">
+        <div class="op-header">
+          <p>DreamWidgets</p>
+        </div>
+        <p></p>
+        <div class="tabs">
+          <p><input id="gen" role="selectedTab" type="button" class="tab-button first-tab" value="General"><input type="button" class="tab-button" role="none" id="qs" value="Quick Shortcuts"><input type="button" class="tab-button" role="none" id="icon-browse" value="Icon Browser"><input type="button" class="tab-button" role="none" id="op-button" value="Options Button"><input type="button" class="tab-button last-tab" role="none" id="imex" value="Import/Export"><br>
+        </div>
+        <div id="general" role="currentTab">
+          <p><b>Custom Styles:</b><br>
+          <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="checkbox-1">
+          <input type="checkbox" id="tr-theme" class="mdl-checkbox__input"><span class="mdl-checkbox__label">Dark style for Tropo Red</span></label><br>
+          <input type="checkbox" id="ly-theme">Dark style for Lynx (more mobile friendly)
+          <p></p>
+          <p></p>
+          <p><b>UI Tweaks:</b><br>
+          <input type="checkbox" id="browser">Mobile-friendly icon browser (paid accounts only!)<br>
+          <input type="checkbox" id="qshortcuts">Quick shortcuts<br>
+          <input type="checkbox" id="rcomments">Use new mobile-friendly comment form everywhere<br>
+          <input type="checkbox" id="flat">Mobile-friendly flat view
+        </div>
+        <div id="shortcuts" role="hidden">
+          <p>Shortcut options go here! Yay!</p>
+        </div>
+        <div id="iconBrowser" role="hidden">
+          <b>Choose Icon Browser Theme:</b><br>
+          <input type="radio" id="boxey">Boxey (default) <input type="radio" id="strip">Bottom Strip <input type="radio" id="custom">Use your own CSS
+          <br></br>
+          <b>Custom CSS:</b>
+          <p><textarea id="your_ibCSS" style="width: 402px; height: 182px;"></textarea><br>
+          <input type="submit" id="ibCSS" value="Save CSS">
+        </div>
+        <div id="ob-options" role="hidden">
+          <b>Choose Options Button Look:</b><br>
+          <input type="radio" id="ob_default">Circle (default) <input type="radio" id="ob_tab">Tab <input type="radio" id="ob_custom">Use your own CSS<br>
+          Set button postion
+          <p></p>
+          <b>Custom CSS:</b>
+          <p><textarea id="your_obCSS" style="width: 402px; height: 182px;"></textarea><br>
+          <input type="submit" id="obCSS" value="Save CSS">
+        </div>
+        <div id="importExport" role="hidden">
+          <b>Import / Export Your Settings:</b>
+          <p><input type="button" id="export" value="Export to file" class="ex">
+          <br></br>
+          Import from file:<br>
+          <input type="file" id="browse" accept=".json" class="im"> <input type="button" id="import" value="Import">
+        </div>
+        <div class="opt-footer">
+          <input id="close-opt" type="button" value="Close">
+        </div>
+      </div>
   `;
   document.body.appendChild(injectDiv);
 
 // sssh, listen! listeners for open/close
   document.getElementById("opt-button").addEventListener('click', function() {
     openOptions();
-  })
+  });
   document.getElementById("close-opt").addEventListener('click', function() {
     closeOptions();
-  })
+  });
   document.getElementById("close-opt").addEventListener('onkeydown', function(evt) {
     if(evt.key == "Escape") {
       closeOptions();
     }
-  })
+  });
+  document.getElementById("opt-overlay").addEventListener('click', function() {
+    closeModal();
+  });
+
+  //Listeners for tabs
+  document.getElementById("gen").addEventListener('click', function() {
+    let optDiv = document.getElementById("general");
+    let mkRole = document.createAttribute("role");
+    let tbRole = document.createAttribute("role");
+
+    killOldTabRole();
+    mkRole.value = "currentTab";
+    optDiv.setAttributeNode(mkRole);
+    tbRole.value = "selectedTab";
+    this.setAttributeNode(tbRole);
+  });
+  document.getElementById("qs").addEventListener('click', function() {
+    let optDiv = document.getElementById("shortcuts");
+    let mkRole = document.createAttribute("role");
+    let tbRole = document.createAttribute("role");
+
+    killOldTabRole();
+    mkRole.value = "currentTab";
+    optDiv.setAttributeNode(mkRole);
+    tbRole.value = "selectedTab";
+    this.setAttributeNode(tbRole);
+  });
+  document.getElementById("icon-browse").addEventListener('click', function() {
+    let optDiv = document.getElementById("iconBrowser");
+    let mkRole = document.createAttribute("role");
+    let tbRole = document.createAttribute("role");
+
+    killOldTabRole();
+    mkRole.value = "currentTab";
+    optDiv.setAttributeNode(mkRole);
+    tbRole.value = "selectedTab";
+    this.setAttributeNode(tbRole);
+  });
+  document.getElementById("op-button").addEventListener('click', function() {
+    let optDiv = document.getElementById("ob-options");
+    let mkRole = document.createAttribute("role");
+    let tbRole = document.createAttribute("role");
+
+    killOldTabRole();
+    mkRole.value = "currentTab";
+    optDiv.setAttributeNode(mkRole);
+    tbRole.value = "selectedTab";
+    this.setAttributeNode(tbRole);
+  });
+  document.getElementById("imex").addEventListener('click', function() {
+    let optDiv = document.getElementById("importExport");
+    let mkRole = document.createAttribute("role");
+    let tbRole = document.createAttribute("role");
+
+    killOldTabRole();
+    mkRole.value = "currentTab";
+    optDiv.setAttributeNode(mkRole);
+    tbRole.value = "selectedTab";
+    this.setAttributeNode(tbRole);
+  });
+
   // Listeners for options
-  document.getElementById("theme").addEventListener('change', function () {
-    let themeCk = document.getElementById("theme").checked;
+  document.getElementById("tr-theme").addEventListener('change', function() {
+    let themeCk = document.getElementById("tr-theme").checked;
     if (themeCk == true) {
       setDarkTheme();
     }
@@ -312,9 +424,9 @@ function injectBrowseBt() {
 function browseOff() {
   let oldBt = document.getElementById("lj_userpicselect");
   let browseBt = document.getElementById("icon-browser-open");
-  if (browseBt == !null) {
-    document.body.removeChild(browseBt);
-    oldBt.style.display = "block";
+  if (browseBt !== null) {
+    document.body.removeChild(browseBt); // this is not working for some reason, fix later
+    oldBt.removeAttribute("style");
     browser.storage.local.set({icon_browser: false})
   }
 }
@@ -347,7 +459,6 @@ function getIcons() {
       ICONCACHE = imgSrc; // assign the icons to our cache for next time
       iconsDiv.innerHTML = ICONCACHE;
       addListeners(); // add listeners to each icon
-      addIndex();
       };
     rq.send();
   }
@@ -359,9 +470,10 @@ function injectBrowser() {
   injectB.innerHTML = `
     <div class="modal">
     <div id="modal-guts">
-      <div id="header">
-        <p>Size: <input type="radio" id="lil-icons" name="size" value="small">Small <input type="radio" id="big-icons" name="size" value="large">Large <input id="icon-browser-close" type="button" value="X">
-        <div id="keyword-label"><p>Keywords: <div id="keywords"></div></div>
+      <div id="icon-header">
+        <div id="radio-ib"><p>Size: <input type="radio" id="lil-icons" name="size" value="small">Small <input type="radio" id="big-icons" name="size" value="large">Large</div> <input id="icon-browser-close" type="button" value="X">
+        <div id="keyword-label">Keywords:
+        <div id="keywords"></div> <input type="button" id="selectB" value="Select Icon"></div>
         <!-- <div id="keyword-opt">Show Keywords: Yes | No</div> -->
       </div>
       <div id="modal-body">
@@ -387,21 +499,9 @@ function injectBrowser() {
   // document.getElementById("lil-icons").addEventListener('onchange' function () {
   //
   // })
-  // document.getElementById("select").addEventListener('click', function () {
-  //   let selectIcon = document.querySelector("selected");
-  //   if (selectIcon !== null) {
-  //     closeModal();
-  //   };
-  // });
-}
-
-function addIndex() {
-  let icons = document.getElementsByClassName("icon");
-
-  for (var i = 0; i < icons.length; i++) {
-    let num = 1;
-    icons[i].tabindex += num;
-  };
+  document.getElementById("selectB").addEventListener('click', function () {
+      closeModal();
+  });
 }
 
 // Remove any lingering selected roles so only one icon is highlighted
@@ -423,6 +523,7 @@ function addListeners() {
     let attribute = iconList[i].getAttribute("id");
     let dropDown = document.getElementById("prop_picture_keyword");
     let kwDisplay = document.getElementById("keywords");
+    let kwLDisplay = document.getElementById("keyword-label");
     let getRole = document.querySelector("div[role=selected]");
     let role = document.createAttribute("role");
 
@@ -430,6 +531,7 @@ function addListeners() {
       killOldRole();
       role.value = "selected";
       this.setAttributeNode(role);
+      kwLDisplay.style.display = "inline-block";
       kwDisplay.innerHTML = attribute; // display the keywords
       kwDisplay.style.display = "inline-block"; //unhide the keyword element
       dropDown.value = attribute; // change to the selected icon in the dropdown box
@@ -461,13 +563,14 @@ function begin() {
   browser.storage.local.get(['theme'], function (response) {
     if (response.theme == true) {
       setDarkTheme();
-      document.getElementById("theme").checked = true;
+      document.getElementById("tr-theme").checked = true;
     }
   })
   browser.storage.local.get(['icon_browser'], function (response) {
     if (response.icon_browser == true) {
       injectBrowseBt();
       document.getElementById("browser").checked = true;
+      document.getElementById("boxey").checked = true;
     }
     else {
       browseOff();

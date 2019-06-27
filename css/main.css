@@ -1,10 +1,11 @@
+@import url(https://fonts.googleapis.com/css?family=Dancing+Script);
+
 #opt-button {
   background-color: #624040;
   color: #d6d1d1;
   font-size: small;
   font-family: Verdana;
   text-align: center;
-  display: inline-block;
   position: fixed;
   opacity: 0.5;
   border: 1px solid #d6d1d1;
@@ -13,7 +14,8 @@
   padding: 10px;
   right: 3%;
   bottom: 5%;
-  z-index: 1200;
+  z-index: 1000;
+  transition: all 0.4s linear;
 }
 
 #opt-button:hover {
@@ -27,6 +29,17 @@
   color: #111;
 }
 
+/* ~animations wheee~ */
+@keyframes slidey {
+  from {top: -300px; opacity: 0}
+  to {top: 50%; opacity: 1}
+}
+
+@keyframes fadey {
+  from {opacity: 0}
+  to {opacity: 1}
+}
+
 #opt-overlay {
   position: fixed;
   top: 0;
@@ -36,33 +49,110 @@
   background: #000;
   background: rgba(0,0,0,0.45);
   display: none;
-  z-index: 1005;
+  z-index: 1200;
+  animation-name: fadey;
+  animation-duration: 0.7s;
 }
 
 .op {
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   padding: 10px;
-  width: 40%;
-  border: 5px solid black;
-  border-radius: 15px;
+  margin-top: 0;
+  width: 45%;
   background: #624040;
   color: #d6d1d1;
-  line-height: 30px;
+  border: 5px solid black;
+  border-radius: 15px;
+  line-height: 1.35em;
   box-shadow: 0 0 10px rgba(0,0,0,0.4);
   transform: translate(-50%,-50%);
-  transition: all .4s ease-in-out;
+  animation-name: slidey;
+  animation-duration: 0.5s;
+  z-index: 1300;
 }
 
-h3 .op {
+/* Responsive design!! */
+@media screen and (max-width: 600px) {
+	.op {
+		width: 95%;
+    height: 95%;
+    margin-top: 0;
+	}
+}
+
+.op .tabs {
   text-align: center;
+  border-bottom: 5px solid #000000;
+}
+
+.first-tab {
+  border-radius: 5px 0 0 0;
+}
+
+.last-tab {
+  border-radius: 0 5px 0 0;
+}
+
+.tab-button {
+  padding: 10px 10px 1px 10px;
+  color: #d6d1d1;
+  border-bottom: 1px solid #000000;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  transition-property: background;
+  transition-duration: 0.4s;
+  transition-timing-function: linear;
+}
+
+input[role=none]:hover {
+  background: #9e1f26;
+  cursor: pointer;
+}
+
+input[role=selectedTab] {
+  background: #4f4f56;
+}
+
+input[role=none] {
+  background: #000000;
+}
+
+div[role=currentTab] {
+  display: block;
+  animation-name: fadey;
+  animation-duration: 0.7s;
+}
+
+div[role=hidden] {
+  display: none;
+  animation-name: fadey;
+  animation-duration: 0.7s;
+}
+
+.op-header {
+  padding-bottom: 20px;
+  padding-top: 10px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 2.6em;
+  font-family: 'Dancing Script', cursive;
+}
+
+.opt-footer {
+  margin-top: 10px;
+  padding-top: 10px;
+  text-align: center;
+  border-top: 5px solid #000000;
 }
 
 #close-opt {
   text-align: center;
 }
 
+/* ~ICON BRWOSER STUFF STARTS HERE~ */
 #icons-overlay {
   position: fixed;
   top: 0;
@@ -73,7 +163,7 @@ h3 .op {
   width: 100%;
   background: #000;
   background: rgba(0,0,0,0.45);
-  z-index: 1004;
+  z-index: 1000;
   display: none;
 }
 
@@ -81,9 +171,11 @@ h3 .op {
   position: fixed;
   top: 50%;
   left: 50%;
-  padding: 25px;
-  width: 950px;
-  height: 55%;
+  margin: 25px;
+  width: 1045px;
+  max-width: 98%;
+  height: 640px;
+  max-height: 100%;
   border: 5px solid #7a7a7a;
   border-radius: 15px;
   background: #624040;
@@ -91,6 +183,7 @@ h3 .op {
   box-shadow: 0 0 10px rgba(0,0,0,0.4);
   transform: translate(-50%,-50%);
   transition: all .4s ease-in-out;
+  z-index: 1010;
 }
 
 .dark .modal {
@@ -112,22 +205,27 @@ hr {
   text-align: center;
 }
 
-#header {
-  text-align: left;
-  font-size: small;
+#icons-header {
   margin: 5px;
   height: 2.3rem;
 }
 
+#radio-ib {
+  text-align: left;
+  font-size: small;
+  padding: 10px;
+}
+
 #keyword-label {
-  display: inline-block;
+  display: none;
+  font-size: small;
+  text-align: center;
 }
 
 #keywords {
   display: none;
-  padding: 10px;
+  padding: 5px;
   text-decoration: underline;
-  text-align: center;
 }
 
 #icon-browser-close {
@@ -154,6 +252,7 @@ hr {
   margin-top: 5px;
   margin-left: 10px;
   margin-right: 10px;
+  padding: 10px;
 }
 
 .icon {
@@ -176,19 +275,10 @@ hr {
   text-align: center;
 }
 
-/* Responsive design!! */
-@media screen and (max-width: 600px) {
-	.modal, .options {
-		width: 95%;
-    height: 95%;
-    margin-top: 0;
-	}
-}
-
-@media screen and (max-width: 600px) {
+/* @media screen and (max-width: 600px) {
 	#modal-guts {
 		width: 95%;
     height: 85%;
     margin-top: 0;
 	}
-}
+} */
