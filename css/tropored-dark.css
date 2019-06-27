@@ -71,6 +71,9 @@ nav ul li.hover a {
     background-color: #703e43;
     color:#ded9d9;
 }
+li::before, li::after {
+    color: #d6d1d1
+}
 /* Inbox */
 .header {
     background: #624040;

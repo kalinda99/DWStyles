@@ -9,6 +9,7 @@
 #iconselector_icons, #iconselector_icons_list {
     padding: 0 !important;
     margin: 0 !important;
+    width: 100% !important;
 }
 /* Move nav to top of page, make it fixed */
 div[role="navigation"] {
