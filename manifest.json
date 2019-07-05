@@ -28,7 +28,6 @@
   [
   "tabs",
   "storage",
-  "cookies",
 	"http://*.dreamwidth.org/*",
 	"https://*.dreamwidth.org/*"
   ]
