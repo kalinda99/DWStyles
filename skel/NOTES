@@ -1,0 +1,9 @@
+RESPONSIVE FORM ANATOMY
+Divs go in this order:
+qrdiv
+qrformdiv
+qrform (this is the id of the form itself)
+qr-meta (where all the shit needs to change)
+-- qr-icon
+-- qr-icon-controls (have to move the icon dropdown from this to qr-meta to make them on the same line, move dwrptools buttons here if applicable)
+qr-body 
