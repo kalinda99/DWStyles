@@ -34,6 +34,10 @@
   from {top: -300px; opacity: 0}
   to {top: 50%; opacity: 1}
 }
+@keyframes b-slidey {
+  from {bottom: -300px; opacity: 0}
+  to {bottom: 0; opacity: 1}
+}
 
 @keyframes fadey {
   from {opacity: 0}
@@ -46,6 +50,8 @@
   bottom: 0;
   left: 0;
   right: 0;
+  height: 100%;
+  width: 100%;
   background: #000;
   background: rgba(0,0,0,0.45);
   display: none;
@@ -65,7 +71,6 @@
   color: #d6d1d1;
   border: 5px solid black;
   border-radius: 15px;
-  line-height: 1.35em;
   box-shadow: 0 0 10px rgba(0,0,0,0.4);
   transform: translate(-50%,-50%);
   animation-name: slidey;
@@ -73,11 +78,14 @@
   z-index: 1300;
 }
 
+.trpo .op {
+  line-height: 1.35em;
+}
+
 /* Responsive design!! */
 @media screen and (max-width: 600px) {
 	.op {
 		width: 95%;
-    height: 95%;
     margin-top: 0;
 	}
 }
@@ -85,6 +93,11 @@
 .op .tabs {
   text-align: center;
   border-bottom: 5px solid #000000;
+  margin: 0;
+}
+
+.op .tabs p {
+  margin: 0;
 }
 
 .first-tab {
@@ -97,11 +110,10 @@
 
 .tab-button {
   padding: 10px 10px 1px 10px;
+  margin-bottom: 0;
   color: #d6d1d1;
-  border-bottom: 1px solid #000000;
-  border-top: none;
-  border-left: none;
-  border-right: none;
+  border-radius: 0;
+  border: none;
   transition-property: background;
   transition-duration: 0.4s;
   transition-timing-function: linear;
@@ -133,8 +145,7 @@ div[role=hidden] {
 }
 
 .op-header {
-  padding-bottom: 20px;
-  padding-top: 10px;
+  margin-top: 0;
   text-align: center;
   font-weight: bold;
   font-size: 2.6em;
@@ -165,9 +176,11 @@ div[role=hidden] {
   background: rgba(0,0,0,0.45);
   z-index: 1000;
   display: none;
+  animation-name: fadey;
+  animation-duration: 0.7s;
 }
 
-.modal {
+/* #icon-modal .boxey {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -184,6 +197,29 @@ div[role=hidden] {
   transform: translate(-50%,-50%);
   transition: all .4s ease-in-out;
   z-index: 1010;
+} */
+
+#icon-modal {
+  position: absolute;
+  bottom: 0;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 70%;
+  border-top: 5px solid #7a7a7a;
+  border-bottom: 5px solid #7a7a7a;
+  margin: 0;
+  background: #624040;
+  color: #d6d1d1;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  transform: translate(-50%,-50%);
+  z-index: 1010;
+  animation-name: b-slidey;
+  animation-duration: 0.4s;
+}
+
+#icon-modal p {
+  margin: 0;
 }
 
 .dark .modal {
@@ -191,50 +227,67 @@ div[role=hidden] {
   color: #111;
 }
 
-#modal-guts {
+/* #modal-guts {
   position: absolute;
   top: 0;
   left: 0;
   height: 100%;
   width: 100%;
-  overflow: auto;
-}
+  margin-bottom: 5px;
+} */
 
-hr {
-  width: 98%;
-  text-align: center;
-}
+/* #modal-guts p {
+  margin: 0;
+} */
 
-#icons-header {
-  margin: 5px;
-  height: 2.3rem;
+#icon-header {
+  display: inline-block;
+  position: absolute;
+  text-align: left;
+  margin-top: 0;
+  padding-top: 0;
+  /* border-bottom: 5px solid black; */
+  width: 100%;
+  height: auto;
+  background: #624040;
 }
 
 #radio-ib {
   text-align: left;
-  font-size: small;
   padding: 10px;
 }
 
-#keyword-label {
+#icon-header #keyword-opt {
+  text-align: left;
+  padding: 10px;
+  display: inline-block;
+}
+
+#icon-header #keyword-label {
   display: none;
-  font-size: small;
   text-align: center;
+  margin-left: 10px;
+  animation-name: fadey;
+  animation-duration: 0.7s;
 }
 
-#keywords {
+#icon-header #keywords {
   display: none;
-  padding: 5px;
+  padding-left: 5px;
   text-decoration: underline;
+  animation-name: fadey;
+  animation-duration: 0.7s;
 }
 
-#icon-browser-close {
+#icon-header #icon-browser-close {
   float: right;
   font-size: 2.0rem;
   position: absolute;
   top: 0;
   border: none;
-  padding-right: 5px;
+  padding-right: 30px;
+  padding-top: 0;
+  margin-top: 0;
   right: 0;
   color: #c1272d;
   background: none;
@@ -244,22 +297,37 @@ hr {
   text-decoration: none;
 }
 
-#icon-browser-close:hover {
+#icon-header #icon-browser-close:hover {
   color: #7a7a7a;
 }
 
 #modal-body {
-  margin-top: 5px;
-  margin-left: 10px;
-  margin-right: 10px;
-  padding: 10px;
+  position: absolute;
+  overflow-x: auto;
+  overflow-y: auto;
+  background: #624040;
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  /* white-space: nowrap; */
+  top: 60px;
+  bottom: 0;
+  margin-left: 2px;
+  margin-right: 2px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .icon {
-  border: solid 10px #2e2e2e;
-  height: 100px;
   display: inline-block;
+  border: solid 10px #2e2e2e;
+  height: auto;
+  padding: 0;
   margin: 5px;
+  height: 100px;
 }
 
 .icon:hover {
