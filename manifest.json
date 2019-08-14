@@ -2,10 +2,13 @@
   "manifest_version": 2,
   "name":"DreamWidgets",
   "version":"1.0",
-  "description":"Tools to make Dreamwidth better and more mobile friendly.",
-  "background": {
-	   "page": "background.html"
-  },
+  "description":"Make Dreamwidth better and more mobile friendly.",
+
+  "web_accessible_resources": [
+    "img/dw-logo.png",
+    "css/lynx-dark.css",
+    "css/tropored-dark.css"
+  ],
 
   "content_scripts": [
   {
@@ -13,7 +16,7 @@
     "run_at": "document_end",
     "css": ["css/main.css"],
     "matches": ["*://*.dreamwidth.org/*"],
-    "js": ["js/things.js"]
+    "js": ["js/themes.js", "js/tweaks.js", "js/icon-browser.js", "js/custom.js", "js/opt.js"]
   }
 ],
 

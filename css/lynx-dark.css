@@ -1,7 +1,16 @@
+body {
+    margin: 0;
+}
 body, #canvas {
     background-color: #2d2d2d !important;
     color: #d6d1d1 !important;
 }
+#content {
+    margin: 8px;
+}
+/* #primary, #secondary {
+    margin: 10px !important;
+} */
 a, a:link, link, .link, *|*:link {
     color: #ee5056;
 }
@@ -21,6 +30,9 @@ div#intro-border-main-left, div#intro-border-main-bottomleft, div#intro-border-m
 div#intro-box-main p {
     color: #ded9d9;
 }
+/* Beta New Entry Page */
+
+
 /* Entry poage */
 .alert-box.secondary, #htmltools, #draftstatus, #options, #submitbar, #compose-entry ul li a {
     background: #624040 !important;
@@ -127,9 +139,9 @@ li::before, li::after {
 }
 /* Form elements */
 .panel .button.secondary, .panel .secondary.submit, .panel button.secondary {
-    background-color: #38383d;
+    background-color: #38383d !important;
     border-color: #424242;
-    color: #e2e2e2;
+    color: #e2e2e2 !important;
     box-shadow: 0 0 2px 2px #973434;
 }
 #panel-quickupdate .contents label, .panel h3, label {
@@ -138,10 +150,11 @@ li::before, li::after {
 input.text, textarea.text, .autocomplete-container, select.select, .autocomplete_container, .nav-search input, .nav-search select, input[type="text"], input[type="password"], input[type="date"], input[type="datetime"], input[type="datetime-local"], input[type="month"], input[type="week"], input[type="email"], input[type="number"], input[type="search"], input[type="tel"], input[type="time"], input[type="url"], input[type="color"], textarea {
     background: #38383d !important;
     color: #e2e2e2 !important;
+    border: 1px solid grey !important;
 }
 .toolbar input, .submit input, .select, .component button, button {
     background-color: #38383d;
-    border: 1px solid #c9c7c7;
+    border: 1px solid grey !important;
     border-radius: 10px;
     padding: 10px;
     box-shadow: none;
@@ -150,12 +163,15 @@ input.text, textarea.text, .autocomplete-container, select.select, .autocomplete
 }
 #body, #commenttext, #subject, #event, #secruity, #prop_picture_keyword, input {
     background: #38383d;
-    border: 1px solid #c9c7c7;
+    border: 1px solid grey !important;
     border-radius: 10px;
     padding: 10px;
     box-shadow: none;
     color: #e2e2e2;
     text-shadow: none;
+}
+.disabled {
+  background-color: #4c4c4c !important;
 }
 /* Icon picker */
 .ui-widget-content {
