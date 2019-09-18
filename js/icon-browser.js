@@ -56,7 +56,8 @@ function getIcons() {
         let icons = jsonThingy.pics[id];
         imgSrc += '<div class="usericon" tabindex=0 id="' + icons.keywords + '"><img src="' + icons.url + '"></div>';
       }
-      ICONCACHE = imgSrc; // assign the icons to our cache for next time
+      let cleanImgSrc = DOMPurify.sanitize(imgSrc);
+      ICONCACHE = cleanImgSrc; // assign the icons to our cache for next time
       iconsDiv.innerHTML = ICONCACHE;
       addListeners(); // add listeners to each icon
       };
@@ -77,9 +78,10 @@ function xmlIconReqs() {
         for (let i = 0; i < jsonThingy.ids.length; i++) {
           let idAll = jsonThingy.ids[i];
           let iconsAll = jsonThingy.pics[idAll];
-          opt += '<option value="' + iconsAll.keywords + '" url="' + iconsAll.url + '">' + iconsAll.keywords + '</option>';
+          opt += '<option value="' + iconsAll.keywords + '" url="' + iconsAll.url + '">' + iconsAll.keywords + '</option>';          
         }
-        newEntryPg.innerHTML = opt;        
+        let cleanOpt = DOMPurify.sanitize(opt);
+        newEntryPg.innerHTML = cleanOpt;        
       }
       let firstID = jsonThingy.ids[0];
       let firstIcon = jsonThingy.pics[firstID];
@@ -97,7 +99,8 @@ function xmlIconReqs() {
         let username = ir.ljuser_tag;
         if (userDiv) {
           iconSrc += '<a href="https://www.dreamwidth.org/manage/icons"><img src="' + icon + '"></a><br>' + username;
-          DICACHE = iconSrc;
+          let cleanIconSrc = DOMPurify.sanitize(iconSrc)
+          DICACHE = cleanIconSrc;
           userDiv.innerHTML = DICACHE;
         } else if (iconPrev) {
           let iconImg = document.createElement("IMG");
@@ -136,7 +139,7 @@ function fixNewEntry() {
   iconBrowseBt.id = "icon-browser-open";
   iconBrowseBt.type = "button";
   iconBrowseBt.value = "browse";
-  iconBrowseBt.class = "small";
+  iconBrowseBt.classList = "small secondary button";
   iconBrowse.appendChild(iconBrowseBt);
 
   xmlIconReqs();
@@ -145,41 +148,35 @@ function fixNewEntry() {
 
 // inject icon browser
 function injectBrowser() {
-  let injectB = document.createElement("div");
-  injectB.innerHTML = `
-    <div id="icon-modal">
-      <div id="icon-header">
-        <!-- <div id="radio-ib"><p>Size: <input type="radio" id="lil-icons" name="size" value="small">Small <input type="radio" id="big-icons" name="size" value="large">Large</div> -->
-        <div id="keyword-opt">Size: Normal | Small <div id="keyword-label">Keywords: <div id="keywords"></div> <input type="button" id="selectB" value="Select Icon"></div></div>
-        <input id="icon-browser-close" type="button" value="X">
-      </div>
-      <div id="modal-body">
-        <div id="icons-list" class="normal-size">
-        <!-- Icons / keywords go here -->
-        </div>
-      </div>
-    </div>
-    `;
-  injectB.id = "icons-overlay";
-  document.body.appendChild(injectB);
-  getIcons();
+  let htmlFile = browser.runtime.getURL("html/icon-browser.html");
 
-  document.getElementById("icon-browser-open").addEventListener('click', function() {
-    openModal();
+  let rq = new XMLHttpRequest();
+  rq.responseType = 'document';
+  rq.open("GET", htmlFile);
+  rq.onload = function() {
+    let iconBrowserDiv = rq.response.body.firstChild;
+    document.body.appendChild(iconBrowserDiv);
+
     getIcons();
-  });
-  document.getElementById("icon-browser-close").addEventListener('click', function() {
-    closeModal();
-  });
-  // document.getElementById("lil-icons").addEventListener('onchange' function () {
-  //
-  // })
-  let iconModal = document.getElementById("icons-overlay");
-  window.onclick = function(event) {
-    if (event.target == iconModal) {
-      iconModal.style.display = "none";
-    }
+  
+    document.getElementById("icon-browser-open").addEventListener('click', function() {
+      openModal();
+      getIcons();
+    });
+    document.getElementById("icon-browser-close").addEventListener('click', function() {
+      closeModal();
+    });
+    // document.getElementById("lil-icons").addEventListener('onchange' function () {
+    //
+    // })
+    let iconModal = document.getElementById("icons-overlay");
+    window.onclick = function(event) {
+      if (event.target == iconModal) {
+        iconModal.style.display = "none";
+      }
+    };
   };
+  rq.send();
 }
 
 // Remove any lingering selected roles so only one icon is highlighted
@@ -231,7 +228,8 @@ function addListeners() {
     })
     let entryPgIcon = document.getElementById("js-icon-select");
     if (entryPgIcon) {
-      entryPgIcon.addEventListener('change', function() {
+      entryPgIcon.addEventListener('change', function(e) {
+        e.preventDefault();
         let selectValue = this.value;
         let iconSrc = document.getElementById("icon-img");
         let isIcon = document.getElementById(selectValue).children[0].src;
@@ -241,19 +239,3 @@ function addListeners() {
   };
 }
 // ~~!! END OF ICON BROWSER STUFF !!~~
-
-// function starto() {
-//   let oldNewBt = document.getElementById("js-icon-browse");
-//   let newDropdown = document.getElementById("js-icon-select");
-//
-//   if (oldNewBt !== null) {
-//     let i = newDropdown.options.length;
-//     while (i == 0) {
-//       console.log("Current entries in select box is " + i + ". Waiting for more...");
-//       if (i > 0) { break; }
-//     };
-//     newDropdown.options.length = 1;
-//   };
-// }
-//
-// window.onload=function() { starto(); };
