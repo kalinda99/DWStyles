@@ -1,16 +1,7 @@
-body {
-    margin: 0;
-}
 body, #canvas {
     background-color: #2d2d2d !important;
     color: #d6d1d1 !important;
 }
-#content {
-    margin: 8px;
-}
-/* #primary, #secondary {
-    margin: 10px !important;
-} */
 a, a:link, link, .link, *|*:link {
     color: #ee5056;
 }
@@ -31,7 +22,33 @@ div#intro-box-main p {
     color: #ded9d9;
 }
 /* Beta New Entry Page */
+.component, .toolbar-container .panel {
+    background: #3e3e3e;
+    color: #cdcccc;
+    border: 2px solid grey !important;
+}
 
+fieldset legend {
+    background: none;
+}
+
+legend, .panel p {
+    color: #cdcccc;
+}
+
+.split.button.secondary span::after, .split.secondary.submit span::after {
+    border-color: #fff transparent transparent transparent;
+}
+
+.autocomplete-container {
+    background: #38383D;
+    color: #cdcccc;
+    border: 1px solid grey !important;
+}
+
+.autocomplete-input {
+    border: none !important;
+}
 
 /* Entry poage */
 .alert-box.secondary, #htmltools, #draftstatus, #options, #submitbar, #compose-entry ul li a {
@@ -41,6 +58,7 @@ div#intro-box-main p {
     padding-left: 10px;
     padding-right: 10px;
 }
+
 /* Navigation */
 nav, .main-nav:not(.expanded) {
     background: #624040;
@@ -138,7 +156,7 @@ li::before, li::after {
     background-color: #624040
 }
 /* Form elements */
-.panel .button.secondary, .panel .secondary.submit, .panel button.secondary {
+.button.secondary, .panel .secondary.submit, .panel button.secondary {
     background-color: #38383d !important;
     border-color: #424242;
     color: #e2e2e2 !important;
@@ -147,12 +165,12 @@ li::before, li::after {
 #panel-quickupdate .contents label, .panel h3, label {
     color: #c4c4c4;
 }
-input.text, textarea.text, .autocomplete-container, select.select, .autocomplete_container, .nav-search input, .nav-search select, input[type="text"], input[type="password"], input[type="date"], input[type="datetime"], input[type="datetime-local"], input[type="month"], input[type="week"], input[type="email"], input[type="number"], input[type="search"], input[type="tel"], input[type="time"], input[type="url"], input[type="color"], textarea {
+input.text, textarea.text, select.select, .nav-search input, .nav-search select, input[type="text"], input[type="password"], input[type="date"], input[type="datetime"], input[type="datetime-local"], input[type="month"], input[type="week"], input[type="email"], input[type="number"], input[type="search"], input[type="tel"], input[type="time"], input[type="url"], input[type="color"], textarea {
     background: #38383d !important;
     color: #e2e2e2 !important;
     border: 1px solid grey !important;
 }
-.toolbar input, .submit input, .select, .component button, button {
+.toolbar input, .submit input, .select {
     background-color: #38383d;
     border: 1px solid grey !important;
     border-radius: 10px;
