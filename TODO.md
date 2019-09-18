@@ -1,12 +1,9 @@
 # TODO
 In no particular order...
-- Quick keywords: easy way to set a pattern of keywords/comments on multiple icons
-- Finish pages for dark theme
-- Add quick shortcuts and customizations for them
--- Add sliding side menu on Lynx with customizable links.
-- Better flat view for mobile
-- Responsive comment forms
 - Import/export settings
-- Allow user to customize options button position and look
+- Allow favourites to be specific to each journal
+- Allow user to customize postions and look of menus
+- Allow user to use their own custom CSS for journal pages, etc.
 - Batch icon upload (huge maybe here)
--
+- Quick keywords: easy way to set a pattern of keywords/comments on multiple icons
+- Add small icon size toggle in icon browser

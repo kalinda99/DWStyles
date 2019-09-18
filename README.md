@@ -5,3 +5,5 @@ This is very much WIP and alpha, I just started writing it. Below is a list of i
 
 - Responsive icon browser (paid accounts only) that works well on mobile.
 - Dark theme for Lynx and Tropo Red.
+- Better thread view for mobile
+- User created bookmarks that are easily accessible on every page
