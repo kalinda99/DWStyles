@@ -1,0 +1,81 @@
+<div id="opt-overlay">
+  <div class="op">
+    <div class="op-header">
+      DreamWidgets
+    </div>
+    <div class="tabs">
+      <p><input id="gen" type="button" class="tab-button selected-tab" value="General">
+      <input type="button" class="tab-button none" id="qs" value="Favourites">
+      <input type="button" class="tab-button none" id="customize" value="Customization">
+
+      <!-- <input type="button" class="tab-button" role="none" id="comment-form" value="Comment Form"> -->
+      <!-- <input type="button" class="tab-button" role="none" id="op-button" value="Options Button"> -->
+      <!-- <input type="button" class="tab-button last-tab" role="none" id="imex" value="Import/Export"><br> -->
+    </div>
+    <div id="general" class="current-tab">
+      <b>General Settings:</b><br>
+      <input type="checkbox" id="dark_style">Use Dark Theme for Lynx/Tropo Red<br>
+      <input type="checkbox" id="browser">Mobile-friendly icon browser (paid accounts only!)<br>
+      <input type="checkbox" id="thread">Mobile-friendly flat view
+    </div>
+    <div id="shortcuts" class="hidden-pg">
+      <b>Favourites:</b><br>
+      <div id="faves-about">
+        Favourites appear in the sidebar on Lynx or when you click the DreamWidgets button on desktop.
+      </div>
+      <p><div id="current-faves">
+        <!-- faves go here -->
+      </div>
+      <div id="add-faves">
+        <p><b>Add Favourite:</b>
+        <form id="new-faves">
+          <div class="add-fav-form" role="first-fave">
+            <label>Name:</label> <input type="text" id="fav-name"> <label>URL:</label> https://<input type="text" id="fav-url">.dreamwidth.org
+          </div>
+          <p><input id="add-fave" type="submit" value="Add Shortcut">
+        </form>
+      </div>
+    </div>
+    <div id="custom" class="hidden-pg">
+        <p>Here you can customize the look of things with your own CSS.</p>
+
+        <p><b>Custom Journal CSS:</b><br>
+        <form id="custom-css">
+            Applies to: <input id="journal-url" type="text"> <input id="current-journal" type="button" value="Use Current Journal"></br>
+            <p>Your CSS:<br>
+            <textarea id="my-journal-css" style="width: 402px; height: 182px;"></textarea><br>
+            <input type="submit" id="sub-j-css" value="Save">
+        </form>
+    </div>
+
+    <!-- <div id="ob-options" role="hidden">
+      <b>Choose Options Button Look:</b><br>
+      <input type="radio" id="ob_default" name="ob">Circle (default) <input type="radio" id="ob_tab" name="ob">Tab <input type="radio" id="ob_custom" name="ob">Use your own CSS<br>
+      Set button postion
+      <p><b>Custom CSS:</b><br>
+      <textarea id="your_obCSS" style="width: 402px; height: 182px;"></textarea><br>
+      <input type="submit" id="obCSS" value="Save CSS">
+    </div>
+    <div id="cf-options" role="hidden">
+      <b>Comment Form Style</b><br>
+      Chosen option will apply on all comment forms on the site.<br>
+      <input type="radio" id="cf-default" name="cf-choice">Use new DW Responsive Form everywhere<br>
+      <input type="radio" id="cf-nicer" name="cf-choice">Nicer (good for mobile/desktop)<br>
+      <input type="radio" id="cf-custom" name="cf-choice">Make your own
+      <p><b>Custom CSS:</b><br>
+      <textarea id="yourCF" style="width: 402px; height: 182px;"></textarea><br>
+      <input type="submit" id="cfCSS" value="Save CSS">
+    </div>
+    <div id="importExport" role="hidden">
+      <b>Import / Export Your Settings:</b>
+      <p><input type="button" id="export" value="Export to file" class="ex">
+      <br></br>
+      Import from file:<br>
+      <input type="file" id="browse" accept=".json" class="im"> <input type="button" id="import" value="Import">
+    </div> -->
+
+    <div class="opt-footer">
+      <input id="close-opt" type="button" value="Close">
+    </div>
+  </div>
+</div>
