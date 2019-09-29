@@ -6,6 +6,10 @@
   from {left: -300px; opacity: 0}
   to {left: 0; opacity: 1}
 }
+@keyframes r-slidey {
+  from {right: -300px; opacity: 0}
+  to {right: 0; opacity: 1}
+}
 @keyframes back-slidey {
   from {left: 0; opacity: 1}
   to {left: -300px; opacity: 0}
@@ -31,22 +35,28 @@ body.hb-open {
 
 /* HAMBURGER BUTTON */
 /* hb button top strip: */
-#hb {
+#hb-strip {
   border-bottom: 5px solid #f4717a;
   width: 100%;
-  text-align: left;
+  background: url("img/dw-logo.png") no-repeat center;
   display: inline-flex;
+  justify-content: left;
   top: 0;
-  /* position: sticky; */
   margin-left: 0 !important;
   margin-right: 0 !important;
 }
 
-.dark #hb {
+.dark #hb-strip {
   border-bottom: 5px solid #624040;
 }
 
+#hb-strip.align-right {
+  justify-content: right;
+}
+
 #hb-button {
+  margin-left: 8px;
+  margin-right: 8px;
   margin-top: 0.3em;
   margin-bottom: 0.5em;
   width: 40px;
@@ -103,7 +113,6 @@ body.hb-open {
   justify-content: flex-start;
   position: absolute;
   top: 0;
-  left: 0;
   padding-right: 10px;
   width: auto;
   height: 100%;
@@ -113,6 +122,27 @@ body.hb-open {
 
 .dark #hb-menu {
   background-color: #38383d;
+}
+
+#hb-menu.right.visible {
+  animation: r-slidey 0.7s;
+}
+
+#hb-menu.left.visible {
+  animation: l-slidey 0.7s;
+}
+
+#hb-menu.left {
+  left: 0;
+}
+
+#hb-menu.right {
+  right: 0;
+}
+
+#hb-menu.hori {
+  flex-direction: row;
+  width: 100%;
 }
 
 #hb-menu hr {
@@ -127,16 +157,6 @@ body.hb-open {
     margin-top: 0;
   }
  }
-
-div[role=hb-invis] {
-  animation-name: back-slidey;
-  animation-duration: 0.7s;
-}
-
-div[role=hb-vis] {
-  animation-name: l-slidey;
-  animation-duration: 0.7s;
-}
 
 #dw-user img {
   border: 5px solid #f4717a;
@@ -178,6 +198,10 @@ div[role=hb-vis] {
   float: right;
   padding: 0;
   margin: 0;
+}
+
+#dwidgets.right {
+  float: left;
 }
 
 #dwidgets .material-icons {
@@ -234,6 +258,39 @@ div[role=hb-vis] {
   color: inherit;
 }
 
+/* CONTROL STRIP LINKS */
+.controlstrip-links:hover, #faves-container a:hover, #faves-header-cs i:hover {
+  cursor: pointer;
+}
+
+#faves-container {
+  display: none;
+  justify-items: center;
+  height: 0;
+  width: 100%;
+  transition: height 0.5s;
+}
+
+#faves-container.open {
+  display: inline-block;
+  height: auto;
+  max-height: 65%;
+  overflow: auto;
+}
+
+#faves-cs-body {
+  background-color: inherit;
+  text-align: center;
+  font-size: small;
+  padding: 10px;
+}
+
+#cs-faves {
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
 /* DESKTOP BUTTONS */
 #desktop-buttons {
   position: fixed;
@@ -248,7 +305,7 @@ div[role=hb-vis] {
   line-height: inherit;
 }
 
-#opt-button, #faves-button {
+.dwidgets-buttons {
   display: inline-block;
   text-align: center;
   background: #eaeaea;
@@ -266,7 +323,7 @@ div[role=hb-vis] {
   /* width: 1.4em; */
 }
 
-#faves-button.active {
+.dwidgets-buttons.active {
   opacity: 0.8;
 }
 

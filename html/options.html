@@ -6,23 +6,18 @@
     <div class="tabs">
       <p><input id="gen" type="button" class="tab-button selected-tab" value="General">
       <input type="button" class="tab-button none" id="qs" value="Favourites">
-      <input type="button" class="tab-button none" id="customize" value="Customization">
-
-      <!-- <input type="button" class="tab-button" role="none" id="comment-form" value="Comment Form"> -->
-      <!-- <input type="button" class="tab-button" role="none" id="op-button" value="Options Button"> -->
-      <!-- <input type="button" class="tab-button last-tab" role="none" id="imex" value="Import/Export"><br> -->
+      <input type="button" class="tab-button none" id="appearance" value="Appearance">
+      <!-- <input type="button" class="tab-button none" id="customize" value="Customization"> -->
+      <input type="button" class="tab-button none" id="imex" value="Import/Export"><br>
     </div>
     <div id="general" class="current-tab">
       <b>General Settings:</b><br>
-      <input type="checkbox" id="dark_style">Use Dark Theme for Lynx/Tropo Red<br>
-      <input type="checkbox" id="browser">Mobile-friendly icon browser (paid accounts only!)<br>
-      <input type="checkbox" id="thread">Mobile-friendly flat view
+      <label class="checkbox"><input type="checkbox" id="dark_style">Use Dark Theme for Lynx/Tropo Red</label><br>
+      <label class="checkbox"><input type="checkbox" id="browser">Mobile-friendly icon browser (paid accounts only!)</label><br>
+      <label class="checkbox"><input type="checkbox" id="thread">Mobile-friendly flat view</label>
     </div>
     <div id="shortcuts" class="hidden-pg">
       <b>Favourites:</b><br>
-      <div id="faves-about">
-        Favourites appear in the sidebar on Lynx or when you click the DreamWidgets button on desktop.
-      </div>
       <p><div id="current-faves">
         <!-- faves go here -->
       </div>
@@ -36,7 +31,7 @@
         </form>
       </div>
     </div>
-    <div id="custom" class="hidden-pg">
+    <!-- <div id="custom" class="hidden-pg">
         <p>Here you can customize the look of things with your own CSS.</p>
 
         <p><b>Custom Journal CSS:</b><br>
@@ -46,33 +41,39 @@
             <textarea id="my-journal-css" style="width: 402px; height: 182px;"></textarea><br>
             <input type="submit" id="sub-j-css" value="Save">
         </form>
-    </div>
+    </div> -->
 
-    <!-- <div id="ob-options" role="hidden">
+    <!-- <div id="ob-options" class="hidden-pg">
       <b>Choose Options Button Look:</b><br>
       <input type="radio" id="ob_default" name="ob">Circle (default) <input type="radio" id="ob_tab" name="ob">Tab <input type="radio" id="ob_custom" name="ob">Use your own CSS<br>
       Set button postion
       <p><b>Custom CSS:</b><br>
       <textarea id="your_obCSS" style="width: 402px; height: 182px;"></textarea><br>
       <input type="submit" id="obCSS" value="Save CSS">
-    </div>
-    <div id="cf-options" role="hidden">
-      <b>Comment Form Style</b><br>
-      Chosen option will apply on all comment forms on the site.<br>
-      <input type="radio" id="cf-default" name="cf-choice">Use new DW Responsive Form everywhere<br>
-      <input type="radio" id="cf-nicer" name="cf-choice">Nicer (good for mobile/desktop)<br>
-      <input type="radio" id="cf-custom" name="cf-choice">Make your own
-      <p><b>Custom CSS:</b><br>
+    </div> -->
+    <div id="opt-appear" class="hidden-pg">
+      <b>Desktop:</b><br>
+      Options/Bookmarks button:<br>
+      <label class="radio"><input type="radio" id="nav-b"name="opt-desktop">Add to DW navigation bar</label><br>
+      <label class="radio"><input type="radio" id="sticky-b" name="opt-desktop">Sticky buttons</label>
+      <!-- <label class="radio"><input type="radio" id="browser-b"name="opt-desktop">Browser toolbar button</label> -->
+      <p></p>
+      <b>Mobile:</b><br>
+      NOTE: These options assume the use of DW's Lynx/Light layout, which looks better on mobile.<br>
+      Options/Bookmarks Menus:<br>
+      <label class="radio"><input type="radio" id="hb-left" name="opt-mobile">Left side-menu</label><br>
+      <label class="radio"><input type="radio" id="hb-right" name="opt-mobile">Right side-menu</label><br>
+      <label class="radio"><input type="radio" id="hb-top" name="opt-mobile">Top menu</label>
+      <!-- <p><b>Custom CSS:</b><br>
       <textarea id="yourCF" style="width: 402px; height: 182px;"></textarea><br>
-      <input type="submit" id="cfCSS" value="Save CSS">
+      <input type="submit" id="cfCSS" value="Save CSS"> -->
     </div>
-    <div id="importExport" role="hidden">
-      <b>Import / Export Your Settings:</b>
-      <p><input type="button" id="export" value="Export to file" class="ex">
+    <div id="importExport" class="hidden-pg">
+      Export Your Settings: <input type="button" id="export" value="Export to file" class="ex">
       <br></br>
       Import from file:<br>
       <input type="file" id="browse" accept=".json" class="im"> <input type="button" id="import" value="Import">
-    </div> -->
+    </div>
 
     <div class="opt-footer">
       <input id="close-opt" type="button" value="Close">

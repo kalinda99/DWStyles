@@ -15,6 +15,8 @@ function getFaves() {
       let favDiv = document.getElementById("current-faves");
       let hbFaveDiv = document.getElementById("fav-links");
       let desktopFaveDiv = document.getElementById("menu-faves");
+      let controlStripFaves = document.getElementById("cs-faves");
+      let faveNav = document.getElementById("fave_subnav");
 
       favDiv.innerHTML = "";
       let favesList = item.user_faves;
@@ -43,8 +45,8 @@ function getFaves() {
         for (let i = 0; i < favesList.length; i++) {
           let name = favesList[i].name;
           let url = favesList[i].url;
-          list += '<i class="material-icons">star</i><a id="' + url + '" href="' + url + '">' + name + '</a>';
-          list = i !== favesList.length-1 ? list + "<br>" : list;
+          list += '<div><i class="material-icons">star</i><a id="' + url + '" href="' + url + '">' + name + '</a></div>';
+          // list = i !== favesList.length-1 ? list + "<br>" : list;
         }
         let cleanList = DOMPurify.sanitize(list)
         hbFaveDiv.innerHTML = cleanList;
@@ -58,6 +60,25 @@ function getFaves() {
           }
           let cleanList = DOMPurify.sanitize(list)
           desktopFaveDiv.innerHTML = cleanList;
+      } else if (controlStripFaves) {
+        let list = "";
+        for (let i = 0; i < favesList.length; i++) {
+          let name = favesList[i].name;
+          let url = favesList[i].url;
+          list += '<span><i class="material-icons">star</i><a id="' + url + '" href="' + url + '">' + name + '</a></span>';
+          list = i !== favesList.length-1 ? list + "&nbsp;&nbsp;" : list;
+        }
+        let cleanList = DOMPurify.sanitize(list)
+        controlStripFaves.innerHTML = cleanList;
+      } else if (faveNav) {
+        let list = "";
+        for (let i = 0; i < favesList.length; i++) {
+          let name = favesList[i].name;
+          let url = favesList[i].url;
+          list += '<li class="subnav"><a id="' + url + '" href="' + url + '">' + name + '</a></li>';
+        }
+        let cleanList = DOMPurify.sanitize(list)
+        faveNav.innerHTML = cleanList;
       }
     }
   })

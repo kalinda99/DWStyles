@@ -1,5 +1,9 @@
 "use strict";
 
+let HASLYNX = false;
+let HASTROPO = false;
+let HASTROPORED = false;
+
 // Appply dark style for Tropo if not on original themed journal page
 function setDarkTheme() {
   let darkLink = document.createElement("LINK");
