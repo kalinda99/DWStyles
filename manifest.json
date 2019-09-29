@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name":"DreamWidgets",
-  "version":"0.99",
+  "version":"0.99.1",
   "description":"Make Dreamwidth better and more mobile friendly.",
 
   "web_accessible_resources": [
@@ -35,6 +35,7 @@
   [
   "tabs",
   "storage",
+  "downloads",
 	"http://*.dreamwidth.org/*",
 	"https://*.dreamwidth.org/*"
   ]
