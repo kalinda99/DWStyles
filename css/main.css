@@ -38,7 +38,8 @@ body.hb-open {
 #hb-strip {
   border-bottom: 5px solid #f4717a;
   width: 100%;
-  background: url("img/dw-logo.png") no-repeat center;
+  height: 60px;
+  background: url("../img/dw-logo.png") no-repeat center;
   display: inline-flex;
   justify-content: left;
   top: 0;
@@ -106,14 +107,16 @@ body.hb-open {
 }
 
 #hb-menu {
-  display: flex;
+  display: inline-flex;
   flex-wrap: wrap;
   flex-direction: column;
   align-content: center;
   justify-content: flex-start;
   position: absolute;
   top: 0;
-  padding-right: 10px;
+  padding-top: 0px;
+  padding-left: 5px;
+  padding-right: 5px;
   width: auto;
   height: 100%;
   background-color: #ececec;
@@ -142,7 +145,22 @@ body.hb-open {
 
 #hb-menu.hori {
   flex-direction: row;
+  flex-flow: nowrap;
+  max-height: 60%;
+  height: auto;
   width: 100%;
+  justify-content: center;
+}
+
+.hori #dw-links {
+  display: inline-flex;
+  flex-direction: row;
+  flex-flow: wrap;
+}
+
+#dw-links div {
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 #hb-menu hr {
@@ -151,12 +169,21 @@ body.hb-open {
   margin: 0.5em;
 }
 
-@media screen and (max-width: 600px) {
-  #hb-menu {
-    width: 60%;
-    margin-top: 0;
-  }
- }
+.hori #hb-menu hr {
+  width: 100%;
+}
+
+.hori #fav-links {
+  display: inline-flex;
+  flex-flow: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.hori #fav-links div {
+  padding-right: 10px;
+  padding-left: 10px;
+}
 
 #dw-user img {
   border: 5px solid #f4717a;
@@ -169,7 +196,7 @@ body.hb-open {
 
 #hb-menu #dw-user {
   text-align: center;
-  margin-top: 50px;
+  margin-top: 55px;
 }
 
 .hb-nav {
@@ -196,16 +223,20 @@ body.hb-open {
 #dwidgets {
   display: flex;
   float: right;
-  padding: 0;
+  padding-top: 0;
   margin: 0;
 }
 
-#dwidgets.right {
+.right #dwidgets {
+  float: left;
+}
+
+.hori #dwidgets {
   float: left;
 }
 
 #dwidgets .material-icons {
-  font-size: 45px;
+  font-size: 38px;
   cursor: pointer;
   margin-bottom: 0;
   margin-top: 0;
@@ -218,41 +249,29 @@ body.hb-open {
 }
 
 #bookmarks-header {
-  font-weight: bold;
-  text-align: center;
-}
-
-#bookmarks-footer {
   text-align: center;
 }
 
 #edit-faves {
-  background-color: #38383d;
+  /* background-color: #38383d;
   border: 1px solid grey !important;
   border-radius: 10px;
   padding: 10px;
+  margin-bottom: 20px;
+  margin-left: 0px;
   box-shadow: none;
-  color: #e2e2e2;
-  text-shadow: none;
-}
-
-#edit-faves:hover {
-  background-color: #53535d;
-}
-#edit-faves:active {
-  background-color: #727280;
+  color: #e2e2e2; */
+  text-decoration: underline;
+  color: inherit;
 }
 
 #hb-footer {
   font-size: 15px;
   color: #9a9a9a;
   text-align: center;
-  justify-self: center;
   align-self: flex-end;
-  position: absolute;
   bottom: 0;
   margin: 15px;
-  /* margin-left: 1px; */
 }
 #hb-footer a {
   color: inherit;
@@ -304,6 +323,10 @@ body.hb-open {
   font-size: 1.2em !important;
   line-height: inherit;
 }
+
+/* .faves_list {
+  visibility: hidden;
+} */
 
 .dwidgets-buttons {
   display: inline-block;
@@ -700,7 +723,16 @@ body.hb-open {
   height: auto;
   padding: 0;
   margin: 5px;
-  /* height: 100px; */
+  height: 100px;
+  transition: all 0.4s linear;
+}
+
+.new-entry {
+  display: inline-block;
+  border: solid 10px #2e2e2e;
+  height: auto;
+  padding: 0;
+  margin: 5px;
   transition: all 0.4s linear;
 }
 

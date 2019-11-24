@@ -5,3 +5,17 @@ body {
 #content {
     margin: 8px;
 }
+
+.entry-content {
+    max-width: 100% !important;
+    object-fit: scale-down !important;
+}
+
+/* 
+@media screen and (max-wdith: 600px) {
+    .entry-content img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+} */
