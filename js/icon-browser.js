@@ -8,18 +8,18 @@ class IconBrowser {
   DICONURL = null; // for default icon URL
   USER = null; // for currently logged in user
 
-  async function getFirstIcon() {
+  async getFirstIcon() {
     const response = await fetch("https://www.dreamwidth.org/__rpc_userpicselect");
     const iconJson = await response.json();
     let firstID = iconJson.ids[0];
     let firstIcon = iconJson.pics[firstID];
     FIRSTICON = firstIcon.url;
-    console.log(FIRSTICON);  
+    console.log(FIRSTICON);
   }
 
   // ~~!! ICON BROWSER STUFF STARTS HERE !!~~
   // inject icon Browse button on pages with icon browsers
-  function injectBrowseBt() {
+  injectBrowseBt() {
     let oldBt = document.getElementById("lj_userpicselect");
     if (oldBt !== null) {
       oldBt.style = "display: none";
@@ -34,7 +34,7 @@ class IconBrowser {
   }
 
   // remove the button
-  function browseOff() {
+  browseOff() {
     let oldBt = document.getElementById("lj_userpicselect");
     let browseBt = document.getElementById("icon-browser-open");
     if (browseBt !== null) {
@@ -45,16 +45,16 @@ class IconBrowser {
   }
 
   // make the icon browser
-  function openModal() {
+  openModal() {
     document.getElementById("icons-overlay").style.display = "block";
   }
   // and make it close
-  function closeModal() {
+  closeModal() {
     document.getElementById("icons-overlay").style.display = "none";
   }
 
   // Populate icons, fetch first icon URL
-  async function getIcons() {
+  async getIcons() {
     if (!ICONCACHE) {
       const response = await fetch("https://www.dreamwidth.org/__rpc_userpicselect");
       const jsonThingy = await response.json();
@@ -105,7 +105,7 @@ class IconBrowser {
     }
   }
 
-  function xmlIconReqs() {
+  xmlIconReqs() {
     if (!DICON) {
       let rq = new XMLHttpRequest();
       rq.responseType = 'json';
@@ -161,7 +161,7 @@ class IconBrowser {
     };
   }
 
-  function fixNewEntry() {
+  fixNewEntry() {
     let getKids = document.getElementById("collapse-target-icons");
     let getCol = getKids.getElementsByClassName("columns");
 
@@ -187,7 +187,7 @@ class IconBrowser {
   }
 
   // inject icon browser
-  function injectBrowser() {
+  injectBrowser() {
     // let htmlFile = browser.runtime.getURL("html/icon-browser.html");
 
     // let rq = new XMLHttpRequest();
@@ -220,7 +220,7 @@ class IconBrowser {
   }
 
   // Remove any lingering selected roles so only one icon is highlighted
-  function killOldRole() {
+  killOldRole() {
     let oldRole = document.querySelector("div[role=selected]");
 
     if (oldRole) {
@@ -230,7 +230,7 @@ class IconBrowser {
     };
   }
 
-  function addListeners() {
+  addListeners() {
     let iconList = document.getElementsByClassName("usericon");
 
     for (var i = 0; i < iconList.length; i++) {
