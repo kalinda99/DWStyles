@@ -5,7 +5,7 @@
     </div>
     <div class="tabs">
       <p><input id="gen" type="button" class="tab-button selected-tab" value="General">
-      <input type="button" class="tab-button none" id="qs" value="Favourites">
+      <input type="button" class="tab-button none" id="qs" value="Bookmarks">
       <input type="button" class="tab-button none" id="appearance" value="Appearance">
       <!-- <input type="button" class="tab-button none" id="customize" value="Customization"> -->
       <input type="button" class="tab-button none" id="imex" value="Import/Export"><br>
@@ -17,17 +17,18 @@
       <label class="checkbox"><input type="checkbox" id="thread">Mobile-friendly flat view</label>
     </div>
     <div id="shortcuts" class="hidden-pg">
-      <b>Favourites:</b><br>
+      <b>Bookmarks:</b><br>
       <p><div id="current-faves">
         <!-- faves go here -->
       </div>
       <div id="add-faves">
-        <p><b>Add Favourite:</b>
+        <p><b>Add Bookmark:</b>
         <form id="new-faves">
           <div class="add-fav-form" role="first-fave">
-            <label>Name:</label> <input type="text" id="fav-name"> <label>URL:</label> https://<input type="text" id="fav-url">.dreamwidth.org
+            <label>Name:</label> <input type="text" id="fav-name"> <label>URL:</label> https://<input type="text" id="fav-url">.dreamwidth.org<br>
+            <label class="checkbox"><input type="checkbox" id="global-fave">Save globally</label>
           </div>
-          <p><input id="add-fave" type="submit" value="Add Shortcut">
+          <p><input id="add-fave" type="submit" value="Add Bookmark">
         </form>
       </div>
     </div>
