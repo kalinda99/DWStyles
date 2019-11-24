@@ -1,28 +1,16 @@
 {
   "manifest_version": 2,
   "name":"DreamWidgets",
-  "version":"0.99.1",
+  "version":"0.99.4",
   "description":"Make Dreamwidth better and more mobile friendly.",
-
-  "web_accessible_resources": [
-    "img/dw-logo.png",
-    "css/lynx-dark.css",
-    "css/lynx-tweaks.css",
-    "css/tropored-dark.css",
-    "html/options.html",
-    "html/icon-browser.html",
-    "html/hb-menu.html"
-  ],
-
-  "content_scripts": [
-  {
-    "all_frames": true,
-    "run_at": "document_start",
-    "css": ["css/main.css"],
-    "matches": ["*://*.dreamwidth.org/*"],
-    "js": ["js/purify.min.js", "js/themes.js", "js/tweaks.js", "js/icon-browser.js", "js/custom.js", "js/opt.js"]
-  }
-],
+  "background": {
+	  "scripts": ["js/background.js"]
+  },
+  "icons": {
+    "48": "img/logo.svg",
+    "96": "img/logo.svg",
+    "128": "img/logo.svg"
+  },
 
   "browser_specific_settings": {
     "gecko": {
@@ -31,12 +19,30 @@
     }
   },
 
-  "permissions":
-  [
-  "tabs",
-  "storage",
-  "downloads",
-	"http://*.dreamwidth.org/*",
-	"https://*.dreamwidth.org/*"
+  "web_accessible_resources": [
+    "img/dw-logo.png",
+    "img/logo.svg",
+    "css/lynx-dark.css",
+    "css/lynx-tweaks.css",
+    "css/tropored-dark.css",
+    "html/options.html",
+    "html/icon-browser.html",
+    "html/hb-menu.html"
+  ],
+
+  "content_scripts": [{
+    "all_frames": true,
+    "run_at": "document_start",
+    "css": ["css/main.css"],
+    "matches": ["*://*.dreamwidth.org/*"],
+    "js": ["js/purify.min.js", "js/inject.js", "js/themes.js", "js/tweaks.js", "js/icon-browser.js", "js/custom.js", "js/opt.js"]
+  }],
+
+  "permissions": [
+    "tabs",
+    "storage",
+    "downloads",
+    "http://*.dreamwidth.org/*",
+    "https://*.dreamwidth.org/*"
   ]
 }
