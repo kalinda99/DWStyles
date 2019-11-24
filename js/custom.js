@@ -1,24 +1,26 @@
+"use strict";
 // all user customizations go here
+
+// find user and global faves in local storage
+function filterFaves(user) {
+  return user = USER;
+}
 
 // fetch faves from local storage
 function getFaves() {
-  // browser.storage.sync.get().then(function(item) {
-  //   console.log(item);    
-  // })
 
   browser.storage.sync.get().then(function(item) {
+    // console.log(item.user_faves.filter(filterFaves));
     if (!item.user_faves) {
       console.log("No user faves found");
-      let user_faves = new Array();
-      browser.storage.sync.set({user_faves});
-    } else if (item.user_faves) {
+    } else if (item.user_faves) {    
       let favDiv = document.getElementById("current-faves");
       let hbFaveDiv = document.getElementById("fav-links");
       let desktopFaveDiv = document.getElementById("menu-faves");
       let controlStripFaves = document.getElementById("cs-faves");
       let faveNav = document.getElementById("fave_subnav");
-
       favDiv.innerHTML = "";
+
       let favesList = item.user_faves;
       for (let i = 0; i < favesList.length; i++) {
         let name = favesList[i].name;
@@ -27,9 +29,11 @@ function getFaves() {
         let addFav = document.createElement("div");
         addFav.classList = "shortcut";
         addFav.id = url;
-        addFav.innerHTML = 'Name: <input type="text" class="favname" value="' + name + '"> URL: <input type="text" class="favurl" value="' + url + '"> <div class="rmfav" id="rm-' + url + '"><i class="material-icons" tabindex="0">clear</i></div>';
+        addFav.innerHTML = 'Name: <input type="text" class="favname" value="' + name + '"> URL: <input type="text" class="favurl" value="' + url + '"> <label class="checkbox"><input type="checkbox" id="g-' + url + '" class="edit-global">G</label><div class="rmfav" id="rm-' + url + '"><i class="material-icons" tabindex="0">clear</i></div>';
     
         favDiv.appendChild(addFav);
+
+        // let globalEdit = document.getElementById("edit-global").checked;
 
         let rmFave = document.getElementsByClassName("rmfav");
         for (let i = 0; i < rmFave.length; i++) {
@@ -88,17 +92,30 @@ function addFaves() {
   let favDiv = document.getElementById("current-faves");
   let favName = document.getElementById("fav-name");
   let favURL = document.getElementById("fav-url");
+  let isGlobal = document.getElementById("global-fave").checked;
 
-  if (favName && favURL) {
+  browser.storage.sync.get().then(function(item) {
+    if (!item.user_faves) {
+      user_faves = new Array;
+      browser.storage.sync.set({user_faves});
+    }
+  })
+
+  if (favName.value && favURL.value) {
     let addFav = document.createElement("div");
     addFav.classList = "shortcut";
     addFav.id = favURL.value;
-    let favHTML = 'Name: <input type="text" class="favname" value="' + favName.value + '"> URL: <input type="text" class="favurl" value="https://' + favURL.value + '.dreamwith.org"> <div class="rmfav" id="rm-' + favURL.value + '"><i class="material-icons" tabindex="0">clear</i></div>';
+    let favHTML = 'Name: <input type="text" class="favname" value="' + favName.value + '"> URL: <input type="text" class="favurl" value="https://' + favURL.value + '.dreamwith.org"> <label class="checkbox"><input type="checkbox" id="g-' + favURL.value + '" class="e-global">G</label><div class="rmfav" id="rm-' + favURL.value + '"><i class="material-icons" tabindex="0">clear</i></div>';
     let cleanFaves = DOMPurify.sanitize(favHTML);
-    addFav.innerHTML = cleanFaves;
+    addFav.innerHTML = cleanFaves;        
 
-    favDiv.appendChild(addFav);    
-    
+    favDiv.appendChild(addFav);
+
+    let globalID = favDiv.lastChild.lastElementChild.previousElementSibling.children[0].id;
+    if (isGlobal == true) {
+      document.getElementById(globalID).checked = true;
+    }
+
     let rmFave = favDiv.lastChild.lastElementChild.id;
     document.getElementById(rmFave).addEventListener('click', function() {        
       let fName = document.getElementById(favDiv.lastChild.id);
@@ -106,28 +123,41 @@ function addFaves() {
       modifyFaves();
     })
 
-    browser.storage.sync.get(['user_faves'], function (item) {
-      console.log(document.getElementById("fav-name").value + document.getElementById("fav-url").value);
-      
-      let user_faves = item.user_faves;
+    document.getElementById(globalID).addEventListener('click', function() {    
+      if (document.getElementById(globalID).checked = true) {
+        modifyFaves();
+      }
+    })
+
+    browser.storage.sync.get().then(function(item) {
+      if (isGlobal == true) {
+        let user_faves = item.user_faves;
         user_faves.push({
           name: favName.value,
           url: "https://" + favURL.value + ".dreamwidth.org",
-      });
-      browser.storage.sync.set({user_faves})
-      favName.value = "";
-      favURL.value = "";
-    });
+          user: null,
+        });
+        browser.storage.sync.set({user_faves})
+        favName.value = "";
+        favURL.value = "";
+      } else {
+          let user_faves = item.user_faves;
+          user_faves.push({
+            name: favName.value,
+            url: "https://" + favURL.value + ".dreamwidth.org",
+            user: USER,
+          });
+          browser.storage.sync.set({user_faves})
+          favName.value = "";
+          favURL.value = "";
+        }
+    })
   } else {
     alert("Hey! Please fill in both Name and URL, come on now...");
   }
-
-  browser.storage.sync.get().then(function (item) {
-    console.log(item.user_faves);
-  });
 }
 
-function modifyFaves() {
+function modifyFaves() {  
   let faveList = document.getElementsByClassName("shortcut");
   let user_faves = new Array();
   for (let i = 0; i < faveList.length; i++) {

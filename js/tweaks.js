@@ -6,7 +6,7 @@ function betterThreadView() {
 
   if (getComments !== null) {
     let getMargin = document.getElementsByClassName("dwexpcomment");
-    let x = 10; // the new magic number for margin left spacing, make this so the user cna change it later :)
+    let x = 10; // the new magic number for margin left spacing, make this so the user can change it later :)
 
     for (var i = 1; i < getMargin.length; i++) {
       let m = parseInt(getMargin[i].style.marginLeft);
@@ -73,9 +73,9 @@ function injectForm() {
     console.log("Hi, I'm the inject form function, I'm about to run...");
     iconSize.style = "width: 100px; height: 100px;"
     qrMeta.insertBefore(iconDD, oldQR);
-    for (var i = 0; i < dwRPbuttons.length; i++) {
-      qrMeta.appendChild(dwRPbuttons[i]);
-    }
+    // for (var i = 0; i < dwRPbuttons.length; i++) {
+    //   qrMeta.appendChild(dwRPbuttons[i]);
+    // }
     console.log("I ran okay!");
   };
 }

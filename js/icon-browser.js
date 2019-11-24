@@ -1,8 +1,20 @@
 "use strict";
 
-// Global variable (in CAPS) for caching icons from the getIcons function so they aren't reloaded every damn time
-let ICONCACHE = null;
-let DICACHE = null;
+// Global variables (in CAPS)
+let ICONCACHE = null; // for icons
+let FIRSTICON = null; // for first icon url, needed to get default icon
+let USERTAG = null; // for the <dw user=""> tag of current user
+let DICONURL = null; // for default icon URL
+let USER = null; // for currently logged in user
+
+async function getFirstIcon() {
+  const response = await fetch("https://www.dreamwidth.org/__rpc_userpicselect");
+  const iconJson = await response.json();
+  let firstID = iconJson.ids[0];
+  let firstIcon = iconJson.pics[firstID];
+  FIRSTICON = firstIcon.url;
+  console.log(FIRSTICON);  
+}
 
 // ~~!! ICON BROWSER STUFF STARTS HERE !!~~
 // inject icon Browse button on pages with icon browsers
@@ -25,7 +37,7 @@ function browseOff() {
   let oldBt = document.getElementById("lj_userpicselect");
   let browseBt = document.getElementById("icon-browser-open");
   if (browseBt !== null) {
-    document.body.removeChild(browseBt); // this is not working for some reason, fix later
+    browseBt.remove(); // this is not working for some reason, fix later
     oldBt.removeAttribute("style");
     browser.storage.sync.set({icon_browser: false})
   }
@@ -40,17 +52,15 @@ function closeModal() {
   document.getElementById("icons-overlay").style.display = "none";
 }
 
-// Get the icons
-function getIcons() {
-  // if ICONCACHE returns null/0/nothing then icons haven't been loaded, so load them
+// Populate icons, fetch first icon URL
+async function getIcons() {
   if (!ICONCACHE) {
-    let rq = new XMLHttpRequest();
-    rq.responseType = 'json';
-    rq.open("GET", "https://www.dreamwidth.org/__rpc_userpicselect", true);
-    rq.onload = function() {
+    const response = await fetch("https://www.dreamwidth.org/__rpc_userpicselect");
+    const jsonThingy = await response.json();
+    let iconsDiv = document.getElementById("icons-list"); // div for icons in browser
+    let newEntryPg = document.getElementById("js-icon-select"); // icon select button on new entry pg
+    if (iconsDiv) {
       let imgSrc = "";
-      let iconsDiv = document.getElementById("icons-list");
-      let jsonThingy = rq.response;
       for (let i = 0; i < jsonThingy.ids.length; i++) {
         let id = jsonThingy.ids[i];
         let icons = jsonThingy.pics[id];
@@ -60,13 +70,42 @@ function getIcons() {
       ICONCACHE = cleanImgSrc; // assign the icons to our cache for next time
       iconsDiv.innerHTML = ICONCACHE;
       addListeners(); // add listeners to each icon
-      };
-    rq.send();
+
+      let iconsList = document.getElementsByClassName("usericon");
+      if (newEntryPg) {
+        for (let i = 0; i < iconsList.length; i++) {
+          iconsList[i].classList.add("new-entry");
+        }
+      }
+    } 
+    if (newEntryPg) {
+      let opt = "";
+      for (let i = 0; i < jsonThingy.ids.length; i++) {
+        let idAll = jsonThingy.ids[i];
+        let iconsAll = jsonThingy.pics[idAll];
+        opt += '<option value="' + iconsAll.keywords + '" id="' + iconsAll.url + '">' + iconsAll.keywords + '</option>';
+      }
+      let cleanOpt = DOMPurify.sanitize(opt);
+      newEntryPg.innerHTML = cleanOpt;
+
+      let iconPrev = document.querySelector("#icon-preview img");
+      iconPrev.src = DICONURL;
+
+      let entryPgIcon = document.getElementById("js-icon-select");
+      entryPgIcon.addEventListener('change', function(e) {
+        e.preventDefault();
+        let iconNum = this.selectedIndex;
+        let selectedIcon = this.children[iconNum].id;
+        console.log(selectedIcon);
+        iconPrev.src = selectedIcon;
+        console.log(iconPrev.src);
+      })
+    }
   }
 }
 
 function xmlIconReqs() {
-  if (!DICACHE) {
+  if (!DICON) {
     let rq = new XMLHttpRequest();
     rq.responseType = 'json';
     rq.open("GET", "https://www.dreamwidth.org/__rpc_userpicselect", true);
@@ -78,7 +117,7 @@ function xmlIconReqs() {
         for (let i = 0; i < jsonThingy.ids.length; i++) {
           let idAll = jsonThingy.ids[i];
           let iconsAll = jsonThingy.pics[idAll];
-          opt += '<option value="' + iconsAll.keywords + '" url="' + iconsAll.url + '">' + iconsAll.keywords + '</option>';          
+          opt += '<option value="' + iconsAll.keywords + '" url="' + iconsAll.url + '">' + iconsAll.keywords + '</option>';
         }
         let cleanOpt = DOMPurify.sanitize(opt);
         newEntryPg.innerHTML = cleanOpt;        
@@ -100,8 +139,8 @@ function xmlIconReqs() {
         if (userDiv) {
           iconSrc += '<a href="https://www.dreamwidth.org/manage/icons"><img src="' + icon + '"></a><br>' + username;
           let cleanIconSrc = DOMPurify.sanitize(iconSrc)
-          DICACHE = cleanIconSrc;
-          userDiv.innerHTML = DICACHE;
+          DICON = cleanIconSrc;
+          userDiv.innerHTML = DICON;
         } else if (iconPrev) {
           let iconImg = document.createElement("IMG");
           let iconDd = document.getElementById("icon-dd");
@@ -112,7 +151,7 @@ function xmlIconReqs() {
           option.text = "(default)";
           option.value = "(default)";
           option.url = icon;
-          iconDd.add(option, iconDd[0]);          
+          iconDd.add(option, iconDd[0]);        
         }
       }
       rqNew.send();
@@ -125,12 +164,12 @@ function fixNewEntry() {
   let getKids = document.getElementById("collapse-target-icons");
   let getCol = getKids.getElementsByClassName("columns");
 
-  let oldBorwser = document.getElementById("js-icon-browser");
-  getKids.removeChild(oldBorwser);
+  let oldBrowser = document.getElementById("js-icon-browser");
+  getKids.removeChild(oldBrowser);
 
   getCol[0].id = "icon-preview";
   let iconPrev = document.getElementById("icon-preview");
-  iconPrev.innerHTML = "";
+  iconPrev.innerHTML = '<img src="">';
   let iconSel = document.getElementById("icon-select");
   getCol[2].id = "icon-browse";
   let iconBrowse = document.getElementById("icon-browse");
@@ -142,22 +181,22 @@ function fixNewEntry() {
   iconBrowseBt.classList = "small secondary button";
   iconBrowse.appendChild(iconBrowseBt);
 
-  xmlIconReqs();
   injectBrowser();
+  getIcons();
 }
 
 // inject icon browser
 function injectBrowser() {
-  let htmlFile = browser.runtime.getURL("html/icon-browser.html");
+  // let htmlFile = browser.runtime.getURL("html/icon-browser.html");
 
-  let rq = new XMLHttpRequest();
-  rq.responseType = 'document';
-  rq.open("GET", htmlFile);
-  rq.onload = function() {
-    let iconBrowserDiv = rq.response.body.firstChild;
-    document.body.appendChild(iconBrowserDiv);
+  // let rq = new XMLHttpRequest();
+  // rq.responseType = 'document';
+  // rq.open("GET", htmlFile);
+  // rq.onload = function() {
+    // let iconBrowserDiv = rq.response.body.firstChild;
+    // document.body.appendChild(iconBrowserDiv);
 
-    getIcons();
+    iconBrowserHTML();
   
     document.getElementById("icon-browser-open").addEventListener('click', function() {
       openModal();
@@ -175,8 +214,8 @@ function injectBrowser() {
         iconModal.style.display = "none";
       }
     };
-  };
-  rq.send();
+  // };
+  // rq.send();
 }
 
 // Remove any lingering selected roles so only one icon is highlighted
@@ -210,7 +249,7 @@ function addListeners() {
       kwDisplay.style.display = "inline-flex"; //unhide the keyword element
 
       let iconDisp = document.querySelector("#qrform .qr-icon img");
-      let entryIcon = document.getElementById("icon-img");
+      let entryIcon = document.querySelector("#icon-preview img");
       let iconSrc = this.getElementsByTagName('img')[0].src;
       if (iconDisp) {
         iconDisp.src = iconSrc;

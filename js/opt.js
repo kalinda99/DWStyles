@@ -8,147 +8,86 @@ function closeOptions() {
   document.getElementById("opt-overlay").style.display = "none";
 }
 
-function injectSticky() {
-  let addButton = document.createElement("div");
-  addButton.id = "desktop-buttons";
-  addButton.innerHTML = `
-  <span id="menu-faves"></span>
-  <br>
-  <span id="faves-button" class="dwidgets-buttons">
-    <i class="material-icons">star</i>
-  </span>
-  <br>
-  <span id="opt-button" class="dwidgets-buttons">
-    <i class="material-icons">settings</i>
-  </span>`;
-  document.body.appendChild(addButton);
+// load up the settings
+function loadSettings() {
+  browser.storage.sync.get(['dark_theme'], function (response) {
+    if (response.dark_theme == true) {
+      setDarkTheme();
+      document.getElementById("dark_style").checked = true;
+    }
+    else {
+      document.getElementById("dark_style").checked = false;
+    }
+  });
 
-  document.getElementById("faves-button").addEventListener('click', function() {
+  browser.storage.sync.get(['icon_browser'], function (response) {
+    if (response.icon_browser == true) {
+      injectBrowseBt();
+      document.getElementById("browser").checked = true;
+    }
+    else {
+      document.getElementById("browser").checked = false;
+    }
+  });
+
+  browser.storage.sync.get(['better_thread'], function (response) {
+    if (response.better_thread == true) {
+      document.getElementById("thread").checked = true;
+      betterThreadView();
+    }
+  });
+
+  checkStyle();
+
+  browser.storage.sync.get(['desktop_opt'], function(response) {
+    console.log(response.desktop_opt);    
+    if (response.desktop_opt == "navbar") {
+      document.getElementById("nav-b").checked = true;
+    } else {
+      document.getElementById("sticky-b").checked = true;
+    }
+  })
+  browser.storage.sync.get(['mobile_opt'], function(response) {
+    console.log(response.mobile_opt);    
+    if (response.mobile_opt == "hb_right") {
+      document.getElementById("hb-right").checked = true;
+    } else if (response.mobile_opt == "hb_top") {
+      document.getElementById("hb-top").checked = true;
+    } else {
+      document.getElementById("hb-left").checked = true;
+    }
+  })
+}
+
+// export settings, which is itself done by background.js this script doesn't have download permissions :(
+function exportSettings() {
+  browser.runtime.sendMessage({command: "getExportURL"}).then(function(message) {
+    console.log("The reply was: " + message.response);
+    if (response == "NoSettings") {
+      alert("Your settings are defaults, there's no need to export aynthing. Maybe add a bookmark or two first?");
+    } else {
+      console.log("The reply was: " + message.response);
+    };
+  });
+}
+
+// functions to import settings saved as json file
+function handleFile() {
+	let file = document.getElementById("browse").files[0]
+	let reader = new FileReader();
+	reader.onload = importSettings;
+	reader.readAsText(file);
+}
+function importSettings()	{
+  let json = JSON.parse(this.result);
+  browser.storage.sync.set(json).then(function() {
+    browser.storage.sync.get().then(function(list) {
+      console.log("Settings imported, here they are: " + list);
+    })
+    loadSettings();
     getFaves();
-    let myFaves = document.getElementById("menu-faves");
-    myFaves.classList.toggle("active");
-    this.classList.toggle("active");
-  })
-
-  document.getElementById("opt-button").addEventListener('click', function() {
-    openOptions();
-  })
-}
-
-function injectCS() {
-  // add options to control strip
-  let controlStrip = document.getElementById("lj_controlstrip");
-  if (controlStrip) {
-    let actionStrip = document.getElementById("lj_controlstrip_actionlinks");
-    let dwDiv = document.createElement("div");
-    dwDiv.id = "dwidgets_controlstrip";
-    dwDiv.innerHTML = `<span id="dwidgets-title">
-        <b>DreamWidgets</b>
-      </span><br>
-      <a id="opt-button-cs" class="controlstrip-links">Options</a> &nbsp;&nbsp; <a id="faves-button-cs" class="controlstrip-links">Faves</a>`;
-    controlStrip.insertBefore(dwDiv, actionStrip);
-
-    // add hidden Faves menu
-    let journalCanvas = document.getElementById("canvas");
-    let mkCSFaves = document.createElement("div");
-
-    mkCSFaves.id = "faves-container";
-    mkCSFaves.innerHTML = `<div id="faves-cs-body">
-      <div id="faves-header-cs">
-        <i class="material-icons" id="edit-faves-cs">edit</i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp <i class="material-icons" id="close-faves-cs">cancel</i>
-      </div>
-      <div id="cs-faves"></div>
-    </div>`
-    document.body.insertBefore(mkCSFaves, journalCanvas);
-    
-    document.getElementById("opt-button-cs").addEventListener('click', function() {
-      openOptions();
-    })
-    document.getElementById("faves-button-cs").addEventListener('click', function() {
-      let csFaves = document.getElementById("faves-container");
-
-      getFaves();
-      csFaves.classList.add("open");
-    })
-    document.getElementById("edit-faves-cs").addEventListener('click', function() { 
-      let optDiv = document.getElementById("shortcuts");
-      killOldTab();
-      document.getElementById("qs").classList.add("selected-tab");
-      optDiv.classList.add("current-tab");
-      document.getElementById("qs").classList.remove("none");
-      optDiv.classList.remove("hidden-pg");
-      getFaves();
-      
-      openOptions();
-    })
-    document.getElementById("close-faves-cs").addEventListener('click', function() {
-      let csFaves = document.getElementById("faves-container");
-      csFaves.classList.remove("open");
-    })
-  }
-}
-
-function injectNavbar() {
-  let navbar = document.querySelector(".left");
-  let faveNav = navbar.firstChild.cloneNode(true);
-  let optNav = navbar.firstChild.cloneNode(true);
-
-  optNav.id = "opt_topnav";
-  optNav.innerHTML = `<a id="opt-open-nav" href="javascript:void">DreamWidgets</a>`
-  faveNav.id = "fave_topnav";
-  faveNav.innerHTML = `<a id="faves-navbar" href="javascript:void">Faves</a>`;
-
-  navbar.appendChild(optNav);
-  navbar.appendChild(faveNav);
-
-  let faveDropdown = document.createElement("UL");
-  faveDropdown.id = "fave_subnav";
-  faveDropdown.classList = "subnav_container dropdown";
-  faveNav.appendChild(faveDropdown);
-  getFaves();
-
-  document.getElementById("opt_topnav").addEventListener('mouseover', function() {
-    optNav.classList.toggle("hover", true);
-  })
-  document.getElementById("opt_topnav").addEventListener('mouseout', function() {
-    optNav.classList.toggle("hover", false);
-  })
-  document.getElementById("fave_topnav").addEventListener('mouseover', function() {
-    faveNav.classList.toggle("hover", true);
-  })
-  document.getElementById("fave_topnav").addEventListener('mouseout', function() {
-    faveNav.classList.toggle("hover", false);
-  })
-
-  document.getElementById("opt-open-nav").addEventListener('click', function() {
-    openOptions();
-  })
-  document.getElementById("faves-navbar").addEventListener('click', function() { 
-    let optDiv = document.getElementById("shortcuts");
-    killOldTab();
-    document.getElementById("qs").classList.add("selected-tab");
-    optDiv.classList.add("current-tab");
-    document.getElementById("qs").classList.remove("none");
-    optDiv.classList.remove("hidden-pg");
-    getFaves();
-    
-    openOptions();
-  })
-}
-
-function checkStyle() {
-  if (HASLYNX) {
-    injectHB();
-  } else if (HASTROPO) {
-    browser.storage.sync.get(['desktop_opt'], function(response) {
-      console.log(response.desktop_opt);
-      if (response.desktop_opt == "navbar") {
-        injectNavbar();
-      } else {
-        injectSticky();
-      }
-    })
-  }
+  });
+	document.getElementById("browse").value = '';
 }
 
 function killOldTab() {
@@ -283,27 +222,17 @@ function optListeners() {
     let radioCk = document.getElementById("nav-b").checked;
     if (radioCk == true) {
       browser.storage.sync.set({desktop_opt: "navbar"});
-      if (HASTROPO) {
+      if (ISDESKTOP) {
         injectNavbar();
-        let desktopButtons = document.getElementById("desktop-buttons");
-        if (desktopButtons) {
-          document.removeChild(desktopButtons);
-        }
-      }      
+      }     
     }
   })
   document.getElementById("sticky-b").addEventListener('change', function() {
     let radioCk = document.getElementById("sticky-b").checked;
     if (radioCk == true) {
       browser.storage.sync.set({desktop_opt: "sticky"});
-      if (HASTROPO) {       
+      if (ISDESKTOP) { 
         injectSticky();
-        let optNav = document.getElementById("opt_topnav");
-        let faveNav = document.getElementById("fave_topnav");
-        if (faveNav && faveNav) {
-          document.removeChild(optNav);
-          document.removeChild(faveNav);
-        }
       }
     }
   })
@@ -317,7 +246,6 @@ function optListeners() {
         document.getElementById("hb-strip").classList = "";
         document.getElementById("hb-menu").classList.remove("right");
         document.getElementById("hb-menu").classList = "left";
-        document.getElementById("dwidgets").classList = "";
       }
     }
   })
@@ -330,7 +258,6 @@ function optListeners() {
         document.getElementById("hb-strip").classList = "align-right";
         document.getElementById("hb-menu").classList.remove("left");
         document.getElementById("hb-menu").classList = "right";
-        document.getElementById("dwidgets").classList = "right";
       }
     }
   })
@@ -341,12 +268,19 @@ function optListeners() {
       if (HASLYNX) {
         document.getElementById("hb-strip").classList = "";
         document.getElementById("hb-strip").classList = "align-right";
-        document.getElementById("hb-menu").classList.remove("right, left");
+        document.getElementById("hb-menu").classList.remove("right" + "left");
         document.getElementById("hb-menu").classList.add("hori");
-        document.getElementById("dwidgets").classList = "";
       }
     }
   })
+
+  // import/export
+  document.getElementById("export").addEventListener('click', function() {    
+    exportSettings();
+  })
+  document.getElementById("import").addEventListener('click', function() {
+    handleFile();
+  })  
 }
 
 function injectHB() {
@@ -361,69 +295,77 @@ function injectHB() {
   let getFooter = document.querySelector("div[role=navigation]");
   getFooter.style.display = "none";
 
-  let htmlFile = browser.runtime.getURL("html/hb-menu.html");
+  hbHTML();
 
-  let rq = new XMLHttpRequest();
-  rq.responseType = 'document';
-  rq.open("GET", htmlFile);
-  rq.onload = function() {
-    let hbHTML = rq.response.body.firstChild;
-    document.body.appendChild(hbHTML);
-
-    let hbOverlay = document.getElementById("hb-overlay");
-    let hbMenu = document.getElementById("hb-menu");
-    document.getElementById("hb-button").addEventListener('click', function () {
-      if (document.querySelector(".hb-active") == null) {
-        this.classList.toggle("hb-active");
-        xmlIconReqs();
-        getFaves();
-        hbOverlay.style.visibility = "visible";
-        hbMenu.classList.add("visible");
-      } else if (document.querySelector(".hb-active")) {
-        this.classList.toggle("hb-active");
-        hbMenu.classList.remove("visible");
-        hbOverlay.style.visibility = "hidden";
+  let hbOverlay = document.getElementById("hb-overlay");
+  let hbMenu = document.getElementById("hb-menu");
+  document.getElementById("hb-button").addEventListener('click', function () {
+    if (document.querySelector(".hb-active") == null) {
+      this.classList.toggle("hb-active");
+      if (!USER) {
+        let iconSrc = '<img src="https://www.dreamwidth.org/img/nouserpic.png"></a><br><a href="https://www.dreamwidth.org/login">Login</a> - <a href="https://www.dreamwidth.org/create">Create Account</a>'
+        document.getElementById("dw-user").innerHTML = iconSrc;
+      } else {
+        let iconSrc = '<a href="https://www.dreamwidth.org/manage/icons"><img src="' + DICONURL + '"></a><br>' + USERTAG;
+        document.getElementById("dw-user").innerHTML = iconSrc;
       }
-    })
-    window.onclick = function(event) {
-      if (event.target == hbOverlay) {
-        hbOverlay.style.visibility = "hidden";
-        hbMenu.classList.remove("visible");
-        document.getElementById("hb-button").classList.toggle("hb-active");
-      }
-    }
-    document.getElementById("opt-hb").addEventListener('click', function() {
-      openOptions();
-      hbOverlay.style.visibility = "hidden";
-      document.getElementById("hb-button").classList.toggle("hb-active");
-    })
-    document.getElementById("edit-faves").addEventListener('click', function() { 
-      let optDiv = document.getElementById("shortcuts");
-      killOldTab();
-      document.getElementById("qs").classList.add("selected-tab");
-      optDiv.classList.add("current-tab");
-      document.getElementById("qs").classList.remove("none");
-      optDiv.classList.remove("hidden-pg");
       getFaves();
-
-      openOptions();
+      hbOverlay.style.visibility = "visible";
+      hbMenu.classList.add("visible");
+    } else if (document.querySelector(".hb-active")) {
+      this.classList.toggle("hb-active");
       hbMenu.classList.remove("visible");
       hbOverlay.style.visibility = "hidden";
+    }
+  })
+  window.onclick = function(event) {
+    if (event.target == hbOverlay) {
+      hbOverlay.style.visibility = "hidden";
+      hbMenu.classList.remove("visible");
       document.getElementById("hb-button").classList.toggle("hb-active");
-    })
-    
-    browser.storage.sync.get(['mobile_opt'], function(response) {
-      if (response.mobile_opt == "hb_right") {
-        header.classList = "align-right";
-        hbMenu.classList.remove("left");
-        hbMenu.classList = "right";
-        document.getElementById("dwidgets").classList = "right";
-      } else if (response.mobile_opt == "hb_top") {
-        hbMenu.classList = "hori"
-      }
-    });
-  };
-  rq.send();  
+    }
+  }
+  document.getElementById("opt-hb").addEventListener('click', function() {
+    openOptions();
+    hbOverlay.style.visibility = "hidden";
+    document.getElementById("hb-button").classList.toggle("hb-active");
+  })
+  document.getElementById("edit-faves").addEventListener('click', function() { 
+    let optDiv = document.getElementById("shortcuts");
+    killOldTab();
+    document.getElementById("qs").classList.add("selected-tab");
+    optDiv.classList.add("current-tab");
+    document.getElementById("qs").classList.remove("none");
+    optDiv.classList.remove("hidden-pg");
+    getFaves();
+
+    openOptions();
+    hbMenu.classList.remove("visible");
+    hbOverlay.style.visibility = "hidden";
+    document.getElementById("hb-button").classList.toggle("hb-active");
+  })
+  
+  browser.storage.sync.get(['mobile_opt'], function(response) {
+    if (response.mobile_opt == "hb_right") {
+      header.classList = "align-right";
+      hbMenu.classList.remove("left");
+      hbMenu.classList = "right";
+      document.getElementById("dwidgets").classList = "right";
+    } else if (response.mobile_opt == "hb_top") {
+      header.classList = "align-right";
+      hbMenu.classList.remove("left");
+      hbMenu.classList = "hori";
+    }
+  })
+
+  // let htmlFile = browser.runtime.getURL("html/hb-menu.html");
+  // let parser = new DOMParser();
+
+  // const response = await fetch(htmlFile);
+  // const rq = await response.text();
+  // let pHTML = parser.parseFromString(rq, "text/html");
+  // let hbHTML = pHTML.response.body.firstChild;
+  // document.body.appendChild(hbHTML);
 }
 
 
@@ -447,68 +389,32 @@ function begin() {
 
   injectCS();
 
-  checkStyle();
-
   optListeners();
 
   newForm();
   window.onload = injectForm();
 
-  browser.storage.sync.get(['dark_theme'], function (response) {
-    if (response.dark_theme == true) {
-      setDarkTheme();
-      document.getElementById("dark_style").checked = true;
-    }
-    else {
-      document.getElementById("dark_style").checked = false;
-    }
-  });
+  loadSettings();
 
-  browser.storage.sync.get(['icon_browser'], function (response) {
-    if (response.icon_browser == true) {
-      injectBrowseBt();
-      document.getElementById("browser").checked = true;
-    }
-    else {
-      document.getElementById("browser").checked = false;
-    }
-  });
-
-  browser.storage.sync.get(['better_thread'], function (response) {
-    if (response.better_thread == true) {
-      document.getElementById("thread").checked = true;
-      betterThreadView();
-    }
-  });
-
-  browser.storage.sync.get(['desktop_opt'], function(response) {
-    console.log(response.desktop_opt);    
-    if (response.desktop_opt == "navbar") {
-      document.getElementById("nav-b").checked = true;
-    } else {
-      document.getElementById("sticky-b").checked = true;
-    }
-  })
-  browser.storage.sync.get(['mobile_opt'], function(response) {
-    console.log(response.mobile_opt);    
-    if (response.desktop_opt == "hb_right") {
-      document.getElementById("hb-right").checked = true;
-    } else if (response.desktop_opt == "hb_top") {
-      document.getElementById("hb-top").checked = true;
-    } else {
-      document.getElementById("hb-left").checked = true;
-    }
-  })
+  console.log("Your global vars are - current user: " + USER + " Default icon URL: " + DICONURL);
 
   let oldNewBt = document.getElementById("js-icon-browse");
-
   if (oldNewBt) {
     fixNewEntry();
-    getIcons();
   };
 }
 
-function inject() {
+async function inject() {
+  console.log(FIRSTICON);
+  
+  getFirstIcon().then(async function() {  
+    const response = await fetch("https://www.dreamwidth.org/__rpc_ctxpopup?mode=getinfo&userpic_url=" + FIRSTICON);
+    const userJson = await response.json(); 
+    USER = userJson.username;
+    DICONURL = userJson.url_userpic;
+    USERTAG = userJson.ljuser_tag;
+  })
+
   for (var i = 0; i < document.styleSheets.length; i++) {
     if (document.styleSheets[i].href && document.styleSheets[i].href.includes("lynx")) {
     HASLYNX = true;
@@ -516,7 +422,9 @@ function inject() {
   }
   for (var i = 0; i < document.styleSheets.length; i++) {
     if (document.styleSheets[i].href && document.styleSheets[i].href.includes("tropo-base")) {
-    HASTROPO = true;
+      ISDESKTOP = true;
+    } else if (document.styleSheets[i].href && document.styleSheets[i].href.includes("gradation")) {
+      ISDESKTOP = true;
     }
   }
   for (var i = 0; i < document.styleSheets.length; i++) {
@@ -525,18 +433,18 @@ function inject() {
     }
   }
 
+  // optHTML();
+
   let htmlFile = browser.runtime.getURL("html/options.html");
+  let parser = new DOMParser();
 
-  let rq = new XMLHttpRequest();
-  rq.responseType = 'document';
-  rq.open("GET", htmlFile);
-  rq.onload = function() {
-    let optHTML = rq.response.body.firstChild;
-    document.body.appendChild(optHTML);
+  const response = await fetch(htmlFile);
+  const rq = await response.text();
+  let pHTML = parser.parseFromString(rq, "text/html");
 
-    begin();
-  };
-  rq.send();
+  let optHTML = pHTML.body.firstChild;
+  document.body.appendChild(optHTML);
 }
 
-window.onload=function() { inject(); };
+window.onload=function() { inject().then(function() {
+  begin();}); };
