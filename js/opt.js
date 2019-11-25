@@ -1,4 +1,8 @@
+import IconBrowser from 'icon-browser.js';
+
 "use strict";
+
+let ibf = new IconBrowser();
 
 // Open and close optons overlay
 function openOptions() {
@@ -22,7 +26,7 @@ function loadSettings() {
 
   browser.storage.sync.get(['icon_browser'], function (response) {
     if (response.icon_browser == true) {
-      injectBrowseBt();
+      ibf.injectBrowseBt();
       document.getElementById("browser").checked = true;
     }
     else {
@@ -191,7 +195,7 @@ function optListeners() {
   document.getElementById("browser").addEventListener('change', function() {
     let iconCk = document.getElementById("browser").checked;
     if (iconCk == true) {
-      injectBrowseBt();
+      ibf.injectBrowseBt();
       browser.storage.sync.set({icon_browser: true});
     }
     else {
@@ -400,14 +404,14 @@ function begin() {
 
   let oldNewBt = document.getElementById("js-icon-browse");
   if (oldNewBt) {
-    fixNewEntry();
+    ibf.fixNewEntry();
   };
 }
 
 async function inject() {
   console.log(FIRSTICON);
   
-  getFirstIcon().then(async function() {  
+  ibf.getFirstIcon().then(async function() {  
     const response = await fetch("https://www.dreamwidth.org/__rpc_ctxpopup?mode=getinfo&userpic_url=" + FIRSTICON);
     const userJson = await response.json(); 
     USER = userJson.username;

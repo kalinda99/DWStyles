@@ -1,6 +1,6 @@
 "use strict";
 
-class IconBrowser {
+export class IconBrowser {
   // Global variables (in CAPS)
   ICONCACHE = null; // for icons
   FIRSTICON = null; // for first icon url, needed to get default icon
@@ -194,29 +194,27 @@ class IconBrowser {
     // rq.responseType = 'document';
     // rq.open("GET", htmlFile);
     // rq.onload = function() {
-      // let iconBrowserDiv = rq.response.body.firstChild;
-      // document.body.appendChild(iconBrowserDiv);
+    // let iconBrowserDiv = rq.response.body.firstChild;
+    // document.body.appendChild(iconBrowserDiv);
 
-      iconBrowserHTML();
-    
-      document.getElementById("icon-browser-open").addEventListener('click', function() {
-        openModal();
-        getIcons();
-      });
-      document.getElementById("icon-browser-close").addEventListener('click', function() {
-        closeModal();
-      });
-      // document.getElementById("lil-icons").addEventListener('onchange' function () {
-      //
-      // })
-      let iconModal = document.getElementById("icons-overlay");
-      window.onclick = function(event) {
-        if (event.target == iconModal) {
-          iconModal.style.display = "none";
-        }
-      };
-    // };
-    // rq.send();
+    iconBrowserHTML();
+  
+    document.getElementById("icon-browser-open").addEventListener('click', function() {
+      openModal();
+      getIcons();
+    });
+    document.getElementById("icon-browser-close").addEventListener('click', function() {
+      closeModal();
+    });
+    // document.getElementById("lil-icons").addEventListener('onchange' function () {
+    //
+    // })
+    let iconModal = document.getElementById("icons-overlay");
+    window.onclick = function(event) {
+      if (event.target == iconModal) {
+        iconModal.style.display = "none";
+      }
+    };
   }
 
   // Remove any lingering selected roles so only one icon is highlighted
