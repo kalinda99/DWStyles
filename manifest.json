@@ -35,7 +35,7 @@
     "run_at": "document_start",
     "css": ["css/main.css"],
     "matches": ["*://*.dreamwidth.org/*"],
-    "js": ["js/purify.min.js", "js/inject.js", "js/themes.js", "js/tweaks.js", "js/icon-browser.js", "js/custom.js", "js/opt.js"]
+    "js": ["js/purify.min.js", "js/inject.js", "js/tweaks.js", "js/icon-browser.js", "js/custom.js", "js/themes.js", "js/opt.js"]
   }],
 
   "permissions": [

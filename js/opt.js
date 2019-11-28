@@ -1,8 +1,6 @@
-import IconBrowser from 'icon-browser.js';
-
 "use strict";
-
-let ibf = new IconBrowser();
+// import IconBrowser from './icon-browser';
+// let ibf = new IconBrowser();
 
 // Open and close optons overlay
 function openOptions() {
@@ -26,7 +24,7 @@ function loadSettings() {
 
   browser.storage.sync.get(['icon_browser'], function (response) {
     if (response.icon_browser == true) {
-      ibf.injectBrowseBt();
+      injectBrowseBt();
       document.getElementById("browser").checked = true;
     }
     else {
@@ -41,7 +39,7 @@ function loadSettings() {
     }
   });
 
-  checkStyle();
+  window.onload = checkStyle();
 
   browser.storage.sync.get(['desktop_opt'], function(response) {
     console.log(response.desktop_opt);    
@@ -195,7 +193,7 @@ function optListeners() {
   document.getElementById("browser").addEventListener('change', function() {
     let iconCk = document.getElementById("browser").checked;
     if (iconCk == true) {
-      ibf.injectBrowseBt();
+      injectBrowseBt();
       browser.storage.sync.set({icon_browser: true});
     }
     else {
@@ -287,7 +285,7 @@ function optListeners() {
   })  
 }
 
-function injectHB() {
+async function injectHB() {
   let header = document.createElement("div");
   let dwContent = document.getElementById("content");
   header.id = "hb-strip";
@@ -299,16 +297,29 @@ function injectHB() {
   let getFooter = document.querySelector("div[role=navigation]");
   getFooter.style.display = "none";
 
-  hbHTML();
+  // hbHTML();
+
+  let htmlFile = browser.runtime.getURL("html/hb-menu.html");
+  let parser = new DOMParser();
+
+  const response = await fetch(htmlFile);
+  const rq = await response.text();
+  let pHTML = parser.parseFromString(rq, "text/html");
+
+  let hbHTML = pHTML.body.firstChild;
+  document.body.appendChild(hbHTML);
 
   let hbOverlay = document.getElementById("hb-overlay");
   let hbMenu = document.getElementById("hb-menu");
+  let readingPg = document.getElementById("reading-pg");
   document.getElementById("hb-button").addEventListener('click', function () {
     if (document.querySelector(".hb-active") == null) {
       this.classList.toggle("hb-active");
       if (!USER) {
         let iconSrc = '<img src="https://www.dreamwidth.org/img/nouserpic.png"></a><br><a href="https://www.dreamwidth.org/login">Login</a> - <a href="https://www.dreamwidth.org/create">Create Account</a>'
         document.getElementById("dw-user").innerHTML = iconSrc;
+
+        readingPg.href = "https://" + USER + ".dreamdwidth.org/read";
       } else {
         let iconSrc = '<a href="https://www.dreamwidth.org/manage/icons"><img src="' + DICONURL + '"></a><br>' + USERTAG;
         document.getElementById("dw-user").innerHTML = iconSrc;
@@ -400,18 +411,16 @@ function begin() {
 
   loadSettings();
 
-  console.log("Your global vars are - current user: " + USER + " Default icon URL: " + DICONURL);
+  // console.log("Your global vars are - current user: " + USER + " Default icon URL: " + DICONURL);
 
   let oldNewBt = document.getElementById("js-icon-browse");
   if (oldNewBt) {
-    ibf.fixNewEntry();
+    fixNewEntry();
   };
 }
 
-async function inject() {
-  console.log(FIRSTICON);
-  
-  ibf.getFirstIcon().then(async function() {  
+async function inject() {  
+  getFirstIcon().then(async function() {  
     const response = await fetch("https://www.dreamwidth.org/__rpc_ctxpopup?mode=getinfo&userpic_url=" + FIRSTICON);
     const userJson = await response.json(); 
     USER = userJson.username;

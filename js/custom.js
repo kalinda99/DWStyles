@@ -1,19 +1,14 @@
 "use strict";
 // all user customizations go here
 
-// find user and global faves in local storage
-function filterFaves(user) {
-  return user = USER;
-}
-
 // fetch faves from local storage
-function getFaves() {
-
+function getFaves() {    
   browser.storage.sync.get().then(function(item) {
-    // console.log(item.user_faves.filter(filterFaves));
     if (!item.user_faves) {
       console.log("No user faves found");
-    } else if (item.user_faves) {    
+    } else if (item.user_faves) {   
+      console.log("Current user is " + USER);
+      
       let favDiv = document.getElementById("current-faves");
       let hbFaveDiv = document.getElementById("fav-links");
       let desktopFaveDiv = document.getElementById("menu-faves");
@@ -21,19 +16,30 @@ function getFaves() {
       let faveNav = document.getElementById("fave_subnav");
       favDiv.innerHTML = "";
 
-      let favesList = item.user_faves;
-      for (let i = 0; i < favesList.length; i++) {
+      let globalList = item.user_faves.filter(function (g) {
+        return g.user == false;
+      })
+      let userList = item.user_faves.filter(function (u) {
+        return u.user == USER;
+      })
+      let favesList = globalList.concat(userList);
+      console.log("Faves are:\n", favesList);
+
+      for (let i = 0; i < favesList.length; i++) {       
         let name = favesList[i].name;
         let url = favesList[i].url;
+        let user = favesList[i].user;
 
         let addFav = document.createElement("div");
         addFav.classList = "shortcut";
         addFav.id = url;
-        addFav.innerHTML = 'Name: <input type="text" class="favname" value="' + name + '"> URL: <input type="text" class="favurl" value="' + url + '"> <label class="checkbox"><input type="checkbox" id="g-' + url + '" class="edit-global">G</label><div class="rmfav" id="rm-' + url + '"><i class="material-icons" tabindex="0">clear</i></div>';
-    
+        addFav.innerHTML = 'Name: <input type="text" class="favname" value="' + name + '"> URL: <input type="text" class="favurl" value="' + url + '"> <label class="checkbox"><input type="checkbox" id="g-' + url + '" class="edit-global">G</label><div class="rmfav" id="rm-' + url + '"><i class="material-icons" tabindex="0">clear</i></div>';    
         favDiv.appendChild(addFav);
+        
+        // let globals = document.getElementsByClassName("edit-global");
+        // if (user == null) {
 
-        // let globalEdit = document.getElementById("edit-global").checked;
+        // }
 
         let rmFave = document.getElementsByClassName("rmfav");
         for (let i = 0; i < rmFave.length; i++) {
@@ -135,7 +141,7 @@ function addFaves() {
         user_faves.push({
           name: favName.value,
           url: "https://" + favURL.value + ".dreamwidth.org",
-          user: null,
+          user: false,
         });
         browser.storage.sync.set({user_faves})
         favName.value = "";
