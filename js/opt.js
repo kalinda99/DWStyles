@@ -39,7 +39,7 @@ function loadSettings() {
     }
   });
 
-  window.onload = checkStyle();
+  checkStyle();
 
   browser.storage.sync.get(['desktop_opt'], function(response) {
     console.log(response.desktop_opt);    
@@ -409,9 +409,10 @@ function begin() {
   newForm();
   window.onload = injectForm();
 
+  // this runs before getFirstIcon for some reasson, as the console.log below shows up first, which I don't understand because inject() is suppposed finish before begin() even starts...
   loadSettings();
 
-  // console.log("Your global vars are - current user: " + USER + " Default icon URL: " + DICONURL);
+  console.log("Your global vars are - current user: " + window.DWT_USER + " Default icon URL: " + window.DWT_DICONURL); // so these return as undefined when this runs
 
   let oldNewBt = document.getElementById("js-icon-browse");
   if (oldNewBt) {
@@ -419,14 +420,17 @@ function begin() {
   };
 }
 
-async function inject() {  
-  getFirstIcon().then(async function() {  
-    const response = await fetch("https://www.dreamwidth.org/__rpc_ctxpopup?mode=getinfo&userpic_url=" + FIRSTICON);
-    const userJson = await response.json(); 
-    USER = userJson.username;
-    DICONURL = userJson.url_userpic;
-    USERTAG = userJson.ljuser_tag;
-  })
+async function inject() {
+  getFirstIcon().then( async() => {  
+    return await fetch("https://www.dreamwidth.org/__rpc_ctxpopup?mode=getinfo&userpic_url=" + FIRSTICON);
+  }).then( async(response) => {
+    return await response.json();
+  }).then( async(userJson) => {
+    window.DWT_USER = userJson.username;
+    window.DWT_DICONURL = userJson.url_userpic;
+    window.DWT_USERTAG = userJson.ljuser_tag;
+    console.log(window.DWT_USER);
+  });
 
   for (var i = 0; i < document.styleSheets.length; i++) {
     if (document.styleSheets[i].href && document.styleSheets[i].href.includes("lynx")) {
@@ -459,5 +463,8 @@ async function inject() {
   document.body.appendChild(optHTML);
 }
 
-window.onload=function() { inject().then(function() {
+let DWT_USER; // for currently logged in user
+let DWT_USERTAG = null; // for the <dw user=""> tag of current user
+
+window.onload = function() { inject().then( function() {
   begin();}); };
