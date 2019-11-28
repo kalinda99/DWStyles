@@ -2,10 +2,7 @@
 // Global variables (in CAPS)
 let ICONCACHE = null; // for icons
 let FIRSTICON = null; // for first icon url, needed to get default icon
-
-let USERTAG = null; // for the <dw user=""> tag of current user
 let DICONURL = null; // for default icon URL
-let USER = null; // for currently logged in user
 
 async function getFirstIcon() {
   const response = await fetch("https://www.dreamwidth.org/__rpc_userpicselect");
@@ -88,7 +85,7 @@ async function getIcons() {
       newEntryPg.innerHTML = cleanOpt;
 
       let iconPrev = document.querySelector("#icon-preview img");
-      iconPrev.src = DICONURL;
+      iconPrev.src = window.DWT_DICONURL;
 
       let entryPgIcon = document.getElementById("js-icon-select");
       entryPgIcon.addEventListener('change', function(e) {

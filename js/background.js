@@ -1,7 +1,7 @@
 "use strict";
 
 function firstRun() {
-  console.log("Hi, wecome to DreamWidgets!~ This is a test to see if shit works :D");
+  console.log("Hi, welcome to DreamWidgets!~ This is a test to see if shit works :D");
 
   // export settings upon getting a message from content script
   browser.runtime.onMessage.addListener(function(request, sender, sendResponse) {

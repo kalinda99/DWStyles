@@ -7,7 +7,7 @@ function getFaves() {
     if (!item.user_faves) {
       console.log("No user faves found");
     } else if (item.user_faves) {   
-      console.log("Current user is " + USER);
+      console.log("Current user is " + window.DWT_USER);
       
       let favDiv = document.getElementById("current-faves");
       let hbFaveDiv = document.getElementById("fav-links");
@@ -20,7 +20,7 @@ function getFaves() {
         return g.user == false;
       })
       let userList = item.user_faves.filter(function (u) {
-        return u.user == USER;
+        return u.user == window.DWT_USER;
       })
       let favesList = globalList.concat(userList);
       console.log("Faves are:\n", favesList);
@@ -151,7 +151,7 @@ function addFaves() {
           user_faves.push({
             name: favName.value,
             url: "https://" + favURL.value + ".dreamwidth.org",
-            user: USER,
+            user: window.DWT_USER,
           });
           browser.storage.sync.set({user_faves})
           favName.value = "";
