@@ -1,11 +1,15 @@
 <div id="icons-overlay">
-  <div id="icon-modal" class="mobile">
-    <div id="icon-header">
-      <!-- <div id="radio-ib"><p>Size: <input type="radio" id="lil-icons" name="size" value="small">Small <input type="radio" id="big-icons" name="size" value="large">Large</div> -->
-      <div id="keyword-opts">Size: Normal | Small <div id="keyword-label">Keywords: <div id="keywords"></div> <input type="button" id="selectB" value="Select Icon"></div></div>
-      <i class="material-icons md-48" id="icon-browser-close" tabindex="0">close</i>
+  <div id="icons-modal" class="icons-mobile">
+    <div id="icons-header">
+      <div id="icon-browse-opts">
+        Size: <span id="icon-size-normal">Normal</span> | <span id="icon-size-small">Small</span> <span id="keyword-label">Keywords: <span id="keywords"></span> <input type="button" id="selectB" value="Select Icon"></span>
+      </div>
+      <span style="cursor: pointer;">
+        <i id="icon-browser-close" class="material-icons" style="font-size: 2em; font-weight: bold;">clear</i>
+      </span>
+      <!-- <i class="material-icons md-48" id="icon-browser-close" tabindex="0">close</i>  -->
     </div>
-    <div id="modal-body">
+    <div id="icons-modal-body">
       <div id="icons-list" class="normal-size">
       <!-- Icons / keywords go here -->
       </div>

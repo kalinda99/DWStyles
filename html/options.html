@@ -1,37 +1,72 @@
-<div id="opt-overlay">
-  <div class="op">
-    <div class="op-header">
-      DreamWidgets
+<div id="dw-settings-overlay">
+  <div class="dw-settings">
+    <div class="dw-settings-tabs">
+      <span style="text-align:right; cursor: pointer;">
+        <i id="dw-settings-close" class="material-icons" style="font-size: 1.5em; font-weight: bold;">clear</i>
+      </span>
+      <input id="dw-settings-tab-gen" type="button" class="tab-button selected-tab" value="General" />
+      <input id="dw-settings-tab-favs" type="button" class="tab-button none" value="Bookmarks" />
     </div>
-    <div class="tabs">
-      <p><input id="gen" type="button" class="tab-button selected-tab" value="General">
-      <input type="button" class="tab-button none" id="qs" value="Bookmarks">
-      <input type="button" class="tab-button none" id="appearance" value="Appearance">
-      <!-- <input type="button" class="tab-button none" id="customize" value="Customization"> -->
-      <input type="button" class="tab-button none" id="imex" value="Import/Export"><br>
-    </div>
-    <div id="general" class="current-tab">
-      <b>General Settings:</b><br>
-      <label class="checkbox"><input type="checkbox" id="dark_style">Use Dark Theme for Lynx/Tropo Red</label><br>
-      <label class="checkbox"><input type="checkbox" id="browser">Mobile-friendly icon browser (paid accounts only!)</label><br>
-      <label class="checkbox"><input type="checkbox" id="thread">Mobile-friendly flat view</label>
-    </div>
-    <div id="shortcuts" class="hidden-pg">
-      <b>Bookmarks:</b><br>
-      <p><div id="current-faves">
-        <!-- faves go here -->
+    <div id="dw-settings-general" class="current-tab">
+      <div style="margin-top: 1em; margin-bottom: 1em;">
+        <input type="checkbox" id="dw-dark_style" /><label for="dw-dark_style">Use Dark Theme for Lynx/Tropo Red</label><br>
+        <input type="checkbox" id="dw-better-thread" /><label for="dw-better-thread">Mobile-friendly flat view</label><br>
+        <input type="checkbox" id="dw-icon-browser" /><label for="dw-icon-browser">Mobile-friendly icon browser <small>(paid accounts only!)</small></label><br>
+        <div style="margin-left: 4px;">-> Icon browser Appearance: <select id="dw-settings-icon-browser-look">
+          <option value="icons-classic">Classic Box</option>
+          <option value="icons-mobile">Mobile-friendly</option>
+        </select></div>
       </div>
+      <div>
+        <div class="col">
+          <h3 style="margin-bottom: .2em; margin-top: .5em;">Tropo/Gradation</h3>
+          Options/Bookmarks button:<br>
+          <input type="radio" id="dw-settings-nav-b" name="opt-desktop" /><label for="dw-settings-nav-b">Add to DW navigation bar</label><br>
+          <input type="radio" id="dw-settings-sticky-b" name="opt-desktop" /><label for="dw-settings-sticky-b">Sticky buttons</label>
+        </div>
+        <div class="col">
+          <h3 style="margin-bottom: .2em; margin-top: .5em;">Lynx/Light</h3> <small>(Recommended for phones)</small><br>
+          Options/Bookmarks Menus:<br>
+          <select id="dw-settings-mob-menu-loc">
+            <option value="hb-left-menu">Left Horizontal</option>
+            <option value="hb-top-menu">Top Vertical</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top: 1.5em;">
+        <div style="text-align:center;">
+          <input type="file" id="browse" accept=".json" class="im" style="margin-right:.5em; font-size:smaller;" />
+          <input type="button" id="import" value="Import" style="margin-right:1.5em" />
+          <input type="button" id="export" value="Export" class="ex" />
+        </div>
+      </div>
+    </div>
+    <div id="dw-settings-faves" class="hidden-pg">
       <div id="add-faves">
-        <p><b>Add Bookmark:</b>
-        <form id="new-faves">
-          <div class="add-fav-form" role="first-fave">
-            <label>Name:</label> <input type="text" id="fav-name"> <label>URL:</label> https://<input type="text" id="fav-url">.dreamwidth.org<br>
-            <label class="checkbox"><input type="checkbox" id="global-fave">Save globally</label>
+        <h3 style="margin-bottom: .5em; margin-top: .4em;">New</h3>
+        <div id="add-fav-form" style="padding-right: 1.5em;">
+          <div>
+            <input type="text" id="fav-name" placeholder="Name" style="width:100%;border-radius: 5px 5px 0 0;box-sizing:border-box;">
           </div>
-          <p><input id="add-fave" type="submit" value="Add Bookmark">
-        </form>
+          <div>
+            <input type="text" id="fav-url" placeholder="URL" style="width:100%;border-radius: 0 0 0 5px;box-sizing:border-box;">
+          </div>
+          <div style="text-align: right;">
+            <input id="add-fave" type="submit" value="Add" style="border-radius: 0 0 5px 5px;">
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom: .4em;  margin-top: .4em;">Current <i style="vertical-align: top; cursor: pointer;" id="settings-edit-faves" class="material-icons" tabindex="0">edit</i></h3>
+        <div id="empty_faves">It's empty here :(</div>
+        <div id="current-faves">
+          <!-- faves will go here -->
+        </div>
       </div>
     </div>
+    <!-- <div id="editable-faves" class="hidden-box">
+        
+    </div> -->
     <!-- <div id="custom" class="hidden-pg">
         <p>Here you can customize the look of things with your own CSS.</p>
 
@@ -52,32 +87,16 @@
       <textarea id="your_obCSS" style="width: 402px; height: 182px;"></textarea><br>
       <input type="submit" id="obCSS" value="Save CSS">
     </div> -->
-    <div id="opt-appear" class="hidden-pg">
-      <b>Desktop:</b><br>
-      Options/Bookmarks button:<br>
-      <label class="radio"><input type="radio" id="nav-b"name="opt-desktop">Add to DW navigation bar</label><br>
-      <label class="radio"><input type="radio" id="sticky-b" name="opt-desktop">Sticky buttons</label>
-      <!-- <label class="radio"><input type="radio" id="browser-b"name="opt-desktop">Browser toolbar button</label> -->
-      <p></p>
-      <b>Mobile:</b><br>
-      NOTE: These options assume the use of DW's Lynx/Light layout, which looks better on mobile.<br>
-      Options/Bookmarks Menus:<br>
-      <label class="radio"><input type="radio" id="hb-left" name="opt-mobile">Left side-menu</label><br>
-      <label class="radio"><input type="radio" id="hb-right" name="opt-mobile">Right side-menu</label><br>
-      <label class="radio"><input type="radio" id="hb-top" name="opt-mobile">Top menu</label>
+    <!-- <div id="opt-appear" class="hidden-pg"> -->
       <!-- <p><b>Custom CSS:</b><br>
       <textarea id="yourCF" style="width: 402px; height: 182px;"></textarea><br>
       <input type="submit" id="cfCSS" value="Save CSS"> -->
-    </div>
-    <div id="importExport" class="hidden-pg">
-      Export Your Settings: <input type="button" id="export" value="Export to file" class="ex">
-      <br></br>
-      Import from file:<br>
-      <input type="file" id="browse" accept=".json" class="im"> <input type="button" id="import" value="Import">
-    </div>
-
-    <div class="opt-footer">
-      <input id="close-opt" type="button" value="Close">
-    </div>
+    <!-- <div class="opt-footer">
+      <input id="dw-settings-close" type="button" value="Close">
+    </div> -->
   </div>
+</div>
+<div id="faves-context" class="context-menu">
+  <span class="editfav">Edit</span><br>
+  <span class="rmfav">Delete</span>
 </div>

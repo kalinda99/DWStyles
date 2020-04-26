@@ -1,30 +1,33 @@
 <div id="hb-overlay">
-  <div id="hb-menu" class="left">
-    <div class="hb-nav">
-      <div id="dwidgets">
-        <i id="opt-hb" class="material-icons">settings</i>
-      </div>
+  <div id="hb-menu" class="hb-left-menu">
+    <div id="hb-nav">
       <div id="dw-user">
         <!-- insert username span here -->
       </div>
-      <hr>
-      <div id="dw-links">
-        <div><a href="https://www.dreamwidth.org">Home</a></div>
-        <div><a href="https://www.dreamwidth.org/inbox/">Inbox</a></div>
-        <div><a href="https://www.dreamwidth.org/manage/settings">Manage Account</a></div>
-        <div><a id="new-entry" href="https://www.dreamwidth.org/update">New Entry</a></div>
-        <div><a id="reading-pg" href="">Reading Page</a></div>
-        <div><a href="https://www.dreamwidth.org/nav/shop">Shop</a></div>
-        <div><a href="https://www.dreamwidth.org/logout">Logout</a></div>
+      <div style="text-align:center; margin-top: .5em;">
+        <button style="padding: .3em; margin: auto; cursor: pointer;">
+          <span id="opt-hb">Settings</span>
+        </button>
       </div>
-      <hr>
-      <div id="bookmarks-header">
+      <div id="dw-links-nouser">
+        <a href="https://www.dreamwidth.org">Home</a>
+        <a href="https://www.dreamwidth.org/nav/explore">Explore</a>
+        <a href="https://www.dreamwidth.org/nav/shop">Shop</a>    
+      </div>
+      <div id="dw-links">
+        <a href="https://www.dreamwidth.org">Home</a>
+        <a href="https://www.dreamwidth.org/update">New Entry</a>
+        <a href="https://www.dreamwidth.org/inbox/">Inbox</a>
+        <a id="reading-pg" href="">Reading Page</a>
+        <a href="https://www.dreamwidth.org/manage/settings">Manage Account</a>
+        <a href="https://www.dreamwidth.org/nav/organize">Organize</a> 
+        <a href="https://www.dreamwidth.org/nav/shop">Shop</a>
+        <a href="https://www.dreamwidth.org/logout">Logout</a>
+      </div>
+      <div id="bookmarks-header" style="text-align: center;">
         <b>Bookmarks</b> (<a id="edit-faves" href="javascript:void">edit</a>)<br>
       </div> 
       <div id="fav-links"></div>
-      <div id="hb-footer">
-        <p>Powered by <a href="https://github.com/kalinda99/dreamwidgets" target="_blank">DreamWidgets</a></p>
-      </div>
     </div>
   </div>
 </div>
