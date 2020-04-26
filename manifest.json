@@ -1,15 +1,15 @@
 {
   "manifest_version": 2,
   "name":"DreamWidgets",
-  "version":"0.99.4",
+  "version":"0.99.12",
   "description":"Make Dreamwidth better and more mobile friendly.",
   "background": {
 	  "scripts": ["js/background.js"]
   },
   "icons": {
-    "48": "img/logo.svg",
-    "96": "img/logo.svg",
-    "128": "img/logo.svg"
+    "48": "img/logo_48.png",
+    "96": "img/logo_96.png",
+    "128": "img/logo_128.png"
   },
 
   "browser_specific_settings": {
@@ -21,7 +21,6 @@
 
   "web_accessible_resources": [
     "img/dw-logo.png",
-    "img/logo.svg",
     "css/lynx-dark.css",
     "css/lynx-tweaks.css",
     "css/tropored-dark.css",
@@ -35,7 +34,7 @@
     "run_at": "document_start",
     "css": ["css/main.css"],
     "matches": ["*://*.dreamwidth.org/*"],
-    "js": ["js/purify.min.js", "js/inject.js", "js/tweaks.js", "js/icon-browser.js", "js/custom.js", "js/themes.js", "js/opt.js"]
+    "js": ["js/purify.min.js", "js/tweaks.js", "js/icon-browser.js", "js/custom.js", "js/themes.js", "js/opt.js"]
   }],
 
   "permissions": [
