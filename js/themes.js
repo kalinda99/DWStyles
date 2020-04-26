@@ -5,15 +5,15 @@ let ISDESKTOP = false;
 let HASTROPORED = false;
 
 // Appply dark style for Tropo if not on original themed journal page
-function setDarkTheme() {
+let setDarkTheme = () => {
   let darkLink = document.createElement("LINK");
   darkLink.id = "theme-style";
   darkLink.rel = "stylesheet";
   darkLink.type = "text/css";
   document.head.appendChild(darkLink);
 
-  let tropoCSS = browser.runtime.getURL("css/tropored-dark.css");
-  let lynxCSS = browser.runtime.getURL("css/lynx-dark.css");
+  let tropoCSS = chrome.runtime.getURL("css/tropored-dark.css");
+  let lynxCSS = chrome.runtime.getURL("css/lynx-dark.css");
   let darkTheme = document.getElementById("theme-style");
 
   let getCSS = document.styleSheets;
@@ -42,7 +42,7 @@ function setDarkTheme() {
 }
 
 // turn off dark theme
-function themeOff() {
+let themeOff = () => {
   let darkTheme = document.getElementById("theme-style");
   darkTheme.remove();
 
@@ -50,41 +50,7 @@ function themeOff() {
   bodyElement.removeAttribute("class");
 };
 
-function injectSticky() {
-  let optNav = document.getElementById("opt_topnav");
-  let faveNav = document.getElementById("fave_topnav");
-  if (optNav && faveNav) {
-    optNav.remove();
-    faveNav.remove();
-  }
-
-  let addButton = document.createElement("div");
-  addButton.id = "desktop-buttons";
-  addButton.innerHTML = `
-  <span id="menu-faves"></span>
-  <br>
-  <span id="faves-button" class="dwidgets-buttons">
-    <i class="material-icons">star</i>
-  </span>
-  <br>
-  <span id="opt-button" class="dwidgets-buttons faves_list">
-    <i class="material-icons">settings</i>
-  </span>`;
-  document.body.appendChild(addButton);
-
-  document.getElementById("faves-button").addEventListener('click', function() {
-    getFaves();
-    let myFaves = document.getElementById("menu-faves");
-    myFaves.classList.toggle("active");
-    this.classList.toggle("active");
-  })
-
-  document.getElementById("opt-button").addEventListener('click', function() {
-    openOptions();
-  })
-}
-
-function injectCS() {
+let injectCS = () => {
   // add options to control strip
   let controlStrip = document.getElementById("lj_controlstrip");
   if (controlStrip) {
@@ -110,34 +76,68 @@ function injectCS() {
     </div>`
     document.body.insertBefore(mkCSFaves, journalCanvas);
     
-    document.getElementById("opt-button-cs").addEventListener('click', function() {
+    document.getElementById("opt-button-cs").addEventListener('click', () => {
       openOptions();
     })
-    document.getElementById("faves-button-cs").addEventListener('click', function() {
+    document.getElementById("faves-button-cs").addEventListener('click', () => {
       let csFaves = document.getElementById("faves-container");
 
       getFaves();
       csFaves.classList.add("open");
     })
-    document.getElementById("edit-faves-cs").addEventListener('click', function() { 
-      let optDiv = document.getElementById("shortcuts");
+    document.getElementById("edit-faves-cs").addEventListener('click', () => { 
+      let optDiv = document.getElementById("dw-settings-faves");
       killOldTab();
-      document.getElementById("qs").classList.add("selected-tab");
+      document.getElementById("dw-settings-tab-faves").classList.add("selected-tab");
       optDiv.classList.add("current-tab");
-      document.getElementById("qs").classList.remove("none");
+      document.getElementById("dw-settings-tab-faves").classList.remove("none");
       optDiv.classList.remove("hidden-pg");
       getFaves();
       
       openOptions();
     })
-    document.getElementById("close-faves-cs").addEventListener('click', function() {
+    document.getElementById("close-faves-cs").addEventListener('click', () => {
       let csFaves = document.getElementById("faves-container");
       csFaves.classList.remove("open");
     })
   }
 }
 
-function injectNavbar() {
+let injectSticky = () => {
+  let optNav = document.getElementById("opt_topnav");
+  let faveNav = document.getElementById("fave_topnav");
+  if (optNav && faveNav) {
+    optNav.remove();
+    faveNav.remove();
+  }
+
+  let addButton = document.createElement("div");
+  addButton.id = "desktop-buttons";
+  addButton.innerHTML = `
+  <span id="menu-faves"></span>
+  <br>
+  <span id="faves-button" class="dwidgets-buttons">
+    <i class="material-icons">star</i>
+  </span>
+  <br>
+  <span id="opt-button" class="dwidgets-buttons faves_list">
+    <i class="material-icons">settings</i>
+  </span>`;
+  document.body.appendChild(addButton);
+
+  document.getElementById("faves-button").addEventListener('click', () => {
+    getFaves();
+    let myFaves = document.getElementById("menu-faves");
+    myFaves.classList.toggle("active");
+    this.classList.toggle("active");
+  })
+
+  document.getElementById("opt-button").addEventListener('click', () => {
+    openOptions();
+  })
+}
+
+let injectNavbar = () => {
   let stickyButtons = document.getElementById("desktop-buttons");
   if (stickyButtons) {
     stickyButtons.remove();
@@ -148,10 +148,10 @@ function injectNavbar() {
   let optNav = navbar.firstChild.cloneNode(true);
 
   optNav.id = "opt_topnav";
-  optNav.innerHTML = `<a id="opt-open-nav" href="javascript:void(0)">DreamWidgets</a>`
+  optNav.innerHTML = `<a id="opt-open-nav">DreamWidgets</a>`
   faveNav.id = "fave_topnav";
   faveNav.class = "faves_list";
-  faveNav.innerHTML = `<a id="faves-navbar" href="javascript:void(1)">Faves</a>`;
+  faveNav.innerHTML = `<a id="faves-navbar">Faves</a>`;
 
   navbar.appendChild(optNav);
   navbar.appendChild(faveNav);
@@ -162,45 +162,31 @@ function injectNavbar() {
   faveNav.appendChild(faveDropdown);
   getFaves();
 
-  document.getElementById("opt_topnav").addEventListener('mouseover', function() {
+  document.getElementById("opt_topnav").addEventListener('mouseenter', () => {
     optNav.classList.toggle("hover", true);
   })
-  document.getElementById("opt_topnav").addEventListener('mouseout', function() {
+  document.getElementById("opt_topnav").addEventListener('mouseleave', () => {
     optNav.classList.toggle("hover", false);
   })
-  document.getElementById("fave_topnav").addEventListener('mouseover', function() {
+  document.getElementById("fave_topnav").addEventListener('mouseenter', () => {
+    getFaves();
     faveNav.classList.toggle("hover", true);
   })
-  document.getElementById("fave_topnav").addEventListener('mouseout', function() {
+  document.getElementById("fave_topnav").addEventListener('mouseleave', () => {
     faveNav.classList.toggle("hover", false);
   })
 
-  document.getElementById("opt-open-nav").addEventListener('click', function() {
+  document.getElementById("opt-open-nav").addEventListener('click', () => {
     openOptions();
   })
-  document.getElementById("faves-navbar").addEventListener('click', function() { 
-    let optDiv = document.getElementById("shortcuts");
+  document.getElementById("faves-navbar").addEventListener('click', () => { 
+    let optDiv = document.getElementById("dw-settings-faves");
     killOldTab();
-    document.getElementById("qs").classList.add("selected-tab");
+    document.getElementById("dw-settings-tab-faves").classList.add("selected-tab");
     optDiv.classList.add("current-tab");
-    document.getElementById("qs").classList.remove("none");
+    document.getElementById("dw-settings-tab-faves").classList.remove("none");
     optDiv.classList.remove("hidden-pg");
-    getFaves();
     
     openOptions();
   })
-}
-
-function checkStyle() {
-  if (HASLYNX) {
-    injectHB();
-  } else if (ISDESKTOP) {
-    browser.storage.sync.get(['desktop_opt'], function(response) {
-      if (response.desktop_opt == "navbar") {
-        injectNavbar();
-      } else {
-        injectSticky();
-      }
-    })
-  }
 }

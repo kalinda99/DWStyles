@@ -2,61 +2,64 @@
 // all user customizations go here
 
 // fetch faves from local storage
-function getFaves() {    
-  browser.storage.sync.get().then(function(item) {
-    if (!item.user_faves) {
+const getFaves = () => {
+  chrome.storage.sync.get(['user_faves'], (item) => {
+    // console.log("getFaves: Current user faves are:")
+    // console.log(item.user_faves);
+    let noFaves = document.getElementById("empty_faves");
+    
+    if (item.user_faves == null) {
       console.log("No user faves found");
-    } else if (item.user_faves) {   
-      console.log("Current user is " + window.DWT_USER);
-      
+      noFaves.style.display = "block";
+    } else if (item.user_faves) {
       let favDiv = document.getElementById("current-faves");
       let hbFaveDiv = document.getElementById("fav-links");
       let desktopFaveDiv = document.getElementById("menu-faves");
       let controlStripFaves = document.getElementById("cs-faves");
       let faveNav = document.getElementById("fave_subnav");
+      noFaves.style.display = "none"; 
       favDiv.innerHTML = "";
 
-      let globalList = item.user_faves.filter(function (g) {
-        return g.user == false;
-      })
-      let userList = item.user_faves.filter(function (u) {
-        return u.user == window.DWT_USER;
-      })
-      let favesList = globalList.concat(userList);
-      console.log("Faves are:\n", favesList);
+      let favesList = item.user_faves;
+      // console.log("Faves are:\n", favesList);
 
       for (let i = 0; i < favesList.length; i++) {       
         let name = favesList[i].name;
         let url = favesList[i].url;
-        let user = favesList[i].user;
 
         let addFav = document.createElement("div");
         addFav.classList = "shortcut";
         addFav.id = url;
-        addFav.innerHTML = 'Name: <input type="text" class="favname" value="' + name + '"> URL: <input type="text" class="favurl" value="' + url + '"> <label class="checkbox"><input type="checkbox" id="g-' + url + '" class="edit-global">G</label><div class="rmfav" id="rm-' + url + '"><i class="material-icons" tabindex="0">clear</i></div>';    
+        addFav.innerHTML = '<span><a class="f_name" href="' + url + '" target="_blank">' + name + '</a></span><span class="b_opts"><i class="material-icons fave-options" tabindex="0">more_vert</i></span>';
         favDiv.appendChild(addFav);
-        
-        // let globals = document.getElementsByClassName("edit-global");
-        // if (user == null) {
 
-        // }
-
-        let rmFave = document.getElementsByClassName("rmfav");
-        for (let i = 0; i < rmFave.length; i++) {
-          rmFave[i].addEventListener('click', function() {
-            let fName = this.parentNode;
-            favDiv.removeChild(fName);
-            modifyFaves();
+        let contextMenu = document.getElementsByClassName("fave-options");
+        let menuState = false;
+        for (let i = 0; i < contextMenu.length; i++) {
+          contextMenu[i].addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            document.getElementById("faves-context").classList.add("context-menu-visible");
+            menuState = true;
           })
-        }        
+        }
+
+        
+
+        // let rmFave = document.getElementsByClassName("rmfav");
+        // for (let i = 0; i < rmFave.length; i++) {
+        //   rmFave[i].addEventListener('click', function() {
+        //     let fName = this.parentNode.parentElement;
+        //     favDiv.removeChild(fName);
+        //     modifyFaves();
+        //   })
+        // }
       }
       if (hbFaveDiv) {
         let list = "";
         for (let i = 0; i < favesList.length; i++) {
           let name = favesList[i].name;
           let url = favesList[i].url;
-          list += '<div><i class="material-icons">star</i><a id="' + url + '" href="' + url + '">' + name + '</a></div>';
-          // list = i !== favesList.length-1 ? list + "<br>" : list;
+          list += '<div><a id="' + url + '" href="' + url + '">' + name + '</a></div>';
         }
         let cleanList = DOMPurify.sanitize(list)
         hbFaveDiv.innerHTML = cleanList;
@@ -85,8 +88,9 @@ function getFaves() {
         for (let i = 0; i < favesList.length; i++) {
           let name = favesList[i].name;
           let url = favesList[i].url;
-          list += '<li class="subnav"><a id="' + url + '" href="' + url + '">' + name + '</a></li>';
+          list += '<li class="subnav"><a href="' + url + '">' + name + '</a></li>';
         }
+
         let cleanList = DOMPurify.sanitize(list)
         faveNav.innerHTML = cleanList;
       }
@@ -94,16 +98,19 @@ function getFaves() {
   })
 }
 
-function addFaves() {
+let addFaves = () => {
+  console.log("This addFaves function has begun...");
+  
   let favDiv = document.getElementById("current-faves");
   let favName = document.getElementById("fav-name");
   let favURL = document.getElementById("fav-url");
-  let isGlobal = document.getElementById("global-fave").checked;
+  let noFaves = document.getElementById("empty_faves");
+  // let isGlobal = document.getElementById("global-fave").checked;
 
-  browser.storage.sync.get().then(function(item) {
-    if (!item.user_faves) {
-      user_faves = new Array;
-      browser.storage.sync.set({user_faves});
+  chrome.storage.sync.get(['user_faves'], (item) => {
+    if (item.user_faves == null) {
+      let user_faves = new Array;
+      chrome.storage.sync.set({user_faves});
     }
   })
 
@@ -111,74 +118,51 @@ function addFaves() {
     let addFav = document.createElement("div");
     addFav.classList = "shortcut";
     addFav.id = favURL.value;
-    let favHTML = 'Name: <input type="text" class="favname" value="' + favName.value + '"> URL: <input type="text" class="favurl" value="https://' + favURL.value + '.dreamwith.org"> <label class="checkbox"><input type="checkbox" id="g-' + favURL.value + '" class="e-global">G</label><div class="rmfav" id="rm-' + favURL.value + '"><i class="material-icons" tabindex="0">clear</i></div>';
+    let favHTML = '<span><a class="f_name" href="' + favURL.value + '" target="_blank">' + favName.value + '</a></span><span class="b_opts"><i class="material-icons rmfav" id="rm-' + favURL.value + '" tabindex="0">clear</i></span>';
     let cleanFaves = DOMPurify.sanitize(favHTML);
-    addFav.innerHTML = cleanFaves;        
+    addFav.innerHTML = cleanFaves;
 
     favDiv.appendChild(addFav);
 
-    let globalID = favDiv.lastChild.lastElementChild.previousElementSibling.children[0].id;
-    if (isGlobal == true) {
-      document.getElementById(globalID).checked = true;
-    }
-
-    let rmFave = favDiv.lastChild.lastElementChild.id;
-    document.getElementById(rmFave).addEventListener('click', function() {        
-      let fName = document.getElementById(favDiv.lastChild.id);
+    let lastFave = favDiv.lastChild.id;
+    document.getElementById("rm-" + lastFave).addEventListener('click', function () {        
+      let fName = favDiv.lastChild;
       favDiv.removeChild(fName);
       modifyFaves();
     })
 
-    document.getElementById(globalID).addEventListener('click', function() {    
-      if (document.getElementById(globalID).checked = true) {
-        modifyFaves();
-      }
-    })
-
-    browser.storage.sync.get().then(function(item) {
-      if (isGlobal == true) {
-        let user_faves = item.user_faves;
-        user_faves.push({
-          name: favName.value,
-          url: "https://" + favURL.value + ".dreamwidth.org",
-          user: false,
-        });
-        browser.storage.sync.set({user_faves})
-        favName.value = "";
-        favURL.value = "";
-      } else {
-          let user_faves = item.user_faves;
-          user_faves.push({
-            name: favName.value,
-            url: "https://" + favURL.value + ".dreamwidth.org",
-            user: window.DWT_USER,
-          });
-          browser.storage.sync.set({user_faves})
-          favName.value = "";
-          favURL.value = "";
-        }
-    })
-  } else {
-    alert("Hey! Please fill in both Name and URL, come on now...");
+    chrome.storage.sync.get(['user_faves'], (item) => {
+      let user_faves = item.user_faves;
+      user_faves.push({
+        name: favName.value,
+        url: favURL.value,
+      });
+      chrome.storage.sync.set({user_faves})
+      favName = "";
+      favURL = "";
+      })
+    } else {
+      alert("Hey! Please fill in both Name and URL, come on now...");
   }
 }
 
-function modifyFaves() {  
+let modifyFaves = () => {
   let faveList = document.getElementsByClassName("shortcut");
   let user_faves = new Array();
   for (let i = 0; i < faveList.length; i++) {
-    let faveName = faveList[i].children[0];
-    let favURL = faveList[i].children[1];
-
+    let nameURLDiv = faveList[i].children[0];
+    let faveName = nameURLDiv.children[0].innerHTML;
+    let favURL = nameURLDiv.children[0].href;
+    
     user_faves.push({
-      name: faveName.value,
-      url: favURL.value,
+      name: faveName,
+      url: favURL,
     })
   }
-  browser.storage.sync.set({user_faves});
+  chrome.storage.sync.set({user_faves});
 }
 
-// function customCSS() {
+// let customCSS = () => {
 //   let journalURL = document.getElementsByClassName("journal-url")[0].value;
 //   let journalStyle = document.getElementsByClassName("journal-style")[0].value;
 

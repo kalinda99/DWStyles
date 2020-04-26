@@ -1,7 +1,7 @@
 "use strict";
 
 // Flat view stuff
-function betterThreadView() {
+let betterThreadView = () => {
   let getComments = document.getElementById("comments");
 
   if (getComments !== null) {
@@ -19,7 +19,8 @@ function betterThreadView() {
 }
 
 // ~~!! COMMENT FORM CSS STUFF STARTS HERE ~~!!
-function newForm() {
+// this is broken so I disabled it, I might revisit it later but it seems unneeded.
+let newForm = () => {
   let formID = document.getElementById("postform");
   // let dwRPbuttons = document.querySelectorAll(" button");
 
@@ -61,7 +62,7 @@ function newForm() {
   };
 }
 
-function injectForm() {
+let injectForm = () => {
   let qrForm = document.getElementById("qrform");
   let iconSize = document.querySelector("#qrform .qr-icon");
   let oldQR = document.querySelector("#qrform .qr-icon-controls");
@@ -80,21 +81,7 @@ function injectForm() {
   };
 }
 
-// function injectNicer() {
-//   let divID = document.createAttribute("id");
-//   let qrDiv = document.getElementById("qrdiv");
-//
-//   if (qrForm !== null ) {
-//     let tagDiv = document.createElement("div"); // make new div for new form
-//     tagDiv.id = "tag-form"; // give new form an id
-//     document.getElementById("qrdiv").appendChild(tagDiv); // append our new div into the form's parent div
-//     let cloneQr = qrForm.cloneNode(true); // clone old form so we can do whatever to it
-//     document.getElementById("tag-form").appendChild(cloneQr); // append newly cloned node and its kids to our new div
-//     qrform.style = "display: none"; // hide the old form
-//   }
-// }
-
-function formOff() {
+let formOff = () => {
   let qrForm = document.getElementById("qrformdiv");
   let iconSize = document.querySelector("#qrform .qr-icon");
   let oldQR = document.querySelector("#qrform .qr-icon-controls");
